@@ -14,7 +14,6 @@ import com.apps.dashboard.model.Application;
 import com.apps.dashboard.repositories.ApplicationRepo;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -24,8 +23,7 @@ public class ApplicationServiceImplTest {
 
   private ApplicationServiceImpl applicationService;
 
-  @BeforeEach
-  public void before() {
+  public ApplicationServiceImplTest() {
     this.applicationRepo = mock(ApplicationRepo.class);
     this.applicationService = new ApplicationServiceImpl(this.applicationRepo);
   }
