@@ -1,5 +1,6 @@
 # ApplicationsDashboard
 
+[![Build Status](https://travis-ci.org/72MiguelGomes/ApplicationsDashboard.svg?branch=master)](https://travis-ci.org/72MiguelGomes/ApplicationsDashboard)
 
 ## Dev Environment
 
