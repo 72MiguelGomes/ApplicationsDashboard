@@ -14,6 +14,7 @@ import com.apps.dashboard.model.ServiceInfo;
 import com.apps.dashboard.repositories.ApplicationStatusRepo;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -23,7 +24,8 @@ public class ApplicationStatusServiceImplTest {
 
   private ApplicationStatusServiceImpl applicationStatusService;
 
-  public ApplicationStatusServiceImplTest() {
+  @BeforeEach
+  public void beforeEach() {
     this.applicationStatusRepo = mock(ApplicationStatusRepo.class);
     this.applicationStatusService = new ApplicationStatusServiceImpl(this.applicationStatusRepo);
   }

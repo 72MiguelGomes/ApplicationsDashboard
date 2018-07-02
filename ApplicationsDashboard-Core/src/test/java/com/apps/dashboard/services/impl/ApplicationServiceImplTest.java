@@ -14,6 +14,7 @@ import com.apps.dashboard.model.Application;
 import com.apps.dashboard.repositories.ApplicationRepo;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -23,7 +24,8 @@ public class ApplicationServiceImplTest {
 
   private ApplicationServiceImpl applicationService;
 
-  public ApplicationServiceImplTest() {
+  @BeforeEach
+  public void beforeEach() {
     this.applicationRepo = mock(ApplicationRepo.class);
     this.applicationService = new ApplicationServiceImpl(this.applicationRepo);
   }
@@ -34,7 +36,6 @@ public class ApplicationServiceImplTest {
 
   @Test
   public void testCreateApplication() {
-
     final String name = "name";
     final String endpoint = "https://localhost:9090";
 
