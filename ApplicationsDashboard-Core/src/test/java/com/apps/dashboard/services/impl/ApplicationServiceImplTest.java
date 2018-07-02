@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -13,22 +12,22 @@ import com.apps.dashboard.exceptions.EntityNotFoundException;
 import com.apps.dashboard.model.Application;
 import com.apps.dashboard.repositories.ApplicationRepo;
 import java.util.Optional;
+import name.falgout.jeffrey.testing.junit.mockito.MockitoExtension;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
+@ExtendWith(MockitoExtension.class)
 public class ApplicationServiceImplTest {
 
-  private ApplicationRepo applicationRepo;
-
+  @InjectMocks
   private ApplicationServiceImpl applicationService;
 
-  @BeforeEach
-  public void beforeEach() {
-    this.applicationRepo = mock(ApplicationRepo.class);
-    this.applicationService = new ApplicationServiceImpl(this.applicationRepo);
-  }
+  @Mock
+  private ApplicationRepo applicationRepo;
 
   /**
    * Test createApplication
