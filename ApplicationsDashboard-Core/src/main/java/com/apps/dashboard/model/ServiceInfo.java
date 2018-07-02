@@ -13,4 +13,12 @@ public class ServiceInfo {
 
   private String version;
 
+  public ServiceInfo update(ServiceInfo serviceInfo) {
+    return ServiceInfo.builder()
+        .applicationId(this.applicationId)
+        .healthy(serviceInfo.healthy)
+        .version(serviceInfo.version)
+        .build();
+  }
+
 }
