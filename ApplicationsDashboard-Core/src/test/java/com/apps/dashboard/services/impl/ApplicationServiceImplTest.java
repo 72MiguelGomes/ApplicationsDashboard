@@ -37,11 +37,11 @@ public class ApplicationServiceImplTest {
   @Test
   public void testCreateApplication() {
     final String name = "name";
-    final String endpoint = "https://localhost:9090";
+    final String dns = "https://localhost:9090";
 
     Application application = Application.builder()
         .name(name)
-        .endpoint(endpoint)
+        .dns(dns)
         .build();
 
     this.applicationService.createApplication(application);
@@ -51,7 +51,7 @@ public class ApplicationServiceImplTest {
     Application capturedApplication = applicationArgumentCaptor.getValue();
 
     assertEquals(name, capturedApplication.getName());
-    assertEquals(endpoint, capturedApplication.getEndpoint());
+    assertEquals(dns, capturedApplication.getDns());
   }
 
   /**
@@ -89,17 +89,17 @@ public class ApplicationServiceImplTest {
 
     final String appId = "123";
     final String name = "finalName";
-    final String endpoint = "http://localhost";
+    final String dns = "http://localhost";
 
     final Application initialApp = Application.builder()
         .id(appId)
         .name("....")
-        .endpoint("....")
+        .dns("....")
         .build();
 
     final Application newApp = Application.builder()
         .name(name)
-        .endpoint(endpoint)
+        .dns(dns)
         .build();
 
     when(this.applicationRepo.getApplicationById(eq(appId))).thenReturn(Optional.of(initialApp));
@@ -114,7 +114,7 @@ public class ApplicationServiceImplTest {
 
     assertEquals(appId, updatedApp.getId());
     assertEquals(name, updatedApp.getName());
-    assertEquals(endpoint, updatedApp.getEndpoint());
+    assertEquals(dns, updatedApp.getDns());
   }
 
 

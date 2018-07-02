@@ -11,14 +11,16 @@ public class Application {
 
   private String name;
 
-  private String endpoint;
+  private String dns;
+
+  private String healthEndpoint;
 
   public Application update(Application application) {
     return Application.builder()
         .id(this.id)
         .name(application.name)
-        .endpoint(application.endpoint)
+        .dns(application.dns)
+        .healthEndpoint(application.healthEndpoint)
         .build();
   }
-
 }
