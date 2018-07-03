@@ -17,7 +17,7 @@ public class ApplicationServiceImpl implements ApplicationService {
   }
 
   @Override
-  public void createApplication(Application application) {
+  public void createApplication(@Nonnull Application application) {
 
     // TODO: Validate Application
 
@@ -25,6 +25,7 @@ public class ApplicationServiceImpl implements ApplicationService {
   }
 
   @Override
+  @Nonnull
   public Application getApplicationById(@Nonnull String id) {
 
     Preconditions.checkArgument(StringUtils.isNoneBlank(id), "ApplicationId must non blank String");
@@ -33,7 +34,8 @@ public class ApplicationServiceImpl implements ApplicationService {
   }
 
   @Override
-  public Application updateApplication(String id, Application application) {
+  @Nonnull
+  public Application updateApplication(@Nonnull String id, @Nonnull Application application) {
 
     Application newApplication = getApplicationById(id).update(application);
 

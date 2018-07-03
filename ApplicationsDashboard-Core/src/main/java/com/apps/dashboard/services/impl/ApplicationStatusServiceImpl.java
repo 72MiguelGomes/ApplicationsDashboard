@@ -6,6 +6,7 @@ import com.apps.dashboard.repositories.ApplicationStatusRepo;
 import com.apps.dashboard.services.ApplicationStatusService;
 import com.google.common.base.Preconditions;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 
 public class ApplicationStatusServiceImpl implements ApplicationStatusService {
@@ -18,7 +19,7 @@ public class ApplicationStatusServiceImpl implements ApplicationStatusService {
   }
 
   @Override
-  public void updateApplicationStatus(String applicationId, ServiceInfo serviceInfo) {
+  public void updateApplicationStatus(@Nonnull String applicationId, @Nonnull ServiceInfo serviceInfo) {
 
     ServiceInfo newServiceInfo = getApplicationStatus(applicationId)
         .orElseThrow(EntityNotFoundException::new)
@@ -28,7 +29,7 @@ public class ApplicationStatusServiceImpl implements ApplicationStatusService {
   }
 
   @Override
-  public Optional<ServiceInfo> getApplicationStatus(String applicationId) {
+  public Optional<ServiceInfo> getApplicationStatus(@Nonnull String applicationId) {
     Preconditions.checkArgument(StringUtils.isNoneBlank(applicationId), "ApplicationId must non blank String");
 
     return Optional.ofNullable(applicationStatusRepo.getApplicationStatus(applicationId));
