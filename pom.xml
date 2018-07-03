@@ -18,18 +18,26 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <jdk.version>1.8</jdk.version>
 
+    <!-- Helpers -->
     <lombok.version>1.18.0</lombok.version>
     <commons-lang3.version>3.7</commons-lang3.version>
     <guava.version>25.1-jre</guava.version>
+
+    <!-- Tests -->
     <mockito-core.version>2.19.0</mockito-core.version>
     <junit-jupiter-engine.version>5.2.0</junit-jupiter-engine.version>
     <mockito-extension.version>1.0.2</mockito-extension.version>
+
+    <!-- Integration -->
     <jersey-client.version>2.27</jersey-client.version>
+
+    <!-- Logging -->
     <log4j.version>2.7</log4j.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
+      <!-- Helpers -->
       <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
@@ -45,6 +53,8 @@
         <artifactId>guava</artifactId>
         <version>${guava.version}</version>
       </dependency>
+
+      <!-- Tests -->
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-engine</artifactId>
@@ -57,6 +67,8 @@
         <version>${mockito-core.version}</version>
         <scope>test</scope>
       </dependency>
+
+      <!-- Integration -->
       <dependency>
         <groupId>name.falgout.jeffrey.testing.junit5</groupId>
         <artifactId>mockito-extension</artifactId>
@@ -100,6 +112,7 @@
   </build>
 
   <dependencies>
+    <!-- Test -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
