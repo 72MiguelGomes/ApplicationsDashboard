@@ -12,8 +12,12 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status.Family;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DefaultApplicationMonitor implements ApplicationMonitor {
+
+  private static Logger LOGGER = LoggerFactory.getLogger(DefaultApplicationMonitor.class);
 
   private Client client;
 
@@ -24,6 +28,10 @@ public class DefaultApplicationMonitor implements ApplicationMonitor {
   @Nonnull
   @Override
   public ServiceInfo checkApplicationStatus(@Nonnull Application application) {
+
+    LOGGER.debug("Checking status for application {} on url {}",
+        application.getId(),
+        application.getHealthCheckUrl());
 
     Invocation.Builder builder = client.target(application.getHealthCheckUrl())
         .request()
@@ -37,9 +45,10 @@ public class DefaultApplicationMonitor implements ApplicationMonitor {
 
       healthy = response.getStatusInfo().getFamily() == Family.SUCCESSFUL;
     } catch (ProcessingException e) {
-      // Timeout
-      // TODO: add Logging
+      LOGGER.warn("Possible Timeout", e.getCause());
     }
+
+    LOGGER.debug("Healthy: {}", healthy);
 
     return ServiceInfo.builder()
         .healthy(healthy)
