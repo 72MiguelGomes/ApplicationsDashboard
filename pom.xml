@@ -24,6 +24,7 @@
     <mockito-core.version>2.19.0</mockito-core.version>
     <junit-jupiter-engine.version>5.2.0</junit-jupiter-engine.version>
     <mockito-extension.version>1.0.2</mockito-extension.version>
+    <jersey-client.version>2.27</jersey-client.version>
   </properties>
 
   <dependencyManagement>
@@ -60,6 +61,11 @@
         <artifactId>mockito-extension</artifactId>
         <version>${mockito-extension.version}</version>
         <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish.jersey.core</groupId>
+        <artifactId>jersey-client</artifactId>
+        <version>${jersey-client.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

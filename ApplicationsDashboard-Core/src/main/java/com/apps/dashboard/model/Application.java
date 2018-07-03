@@ -23,4 +23,9 @@ public class Application {
         .healthEndpoint(application.healthEndpoint)
         .build();
   }
+
+  public String getHealthCheckUrl() {
+    return this.dns + this.healthEndpoint;
+  }
+
 }
