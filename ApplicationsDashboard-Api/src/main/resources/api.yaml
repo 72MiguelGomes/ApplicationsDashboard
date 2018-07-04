@@ -1,0 +1,18 @@
+swagger: '2.0'
+info:
+  title: Sonar Service
+  description: Sonar Service
+  version: "1.0.0"
+basePath: /
+produces:
+  - application/json
+paths:
+  /ping:
+    get:
+      operationId: ping
+      summary: Application HealthCheck
+      tags:
+        - info
+      responses:
+        200:
+          description: Ok Object
