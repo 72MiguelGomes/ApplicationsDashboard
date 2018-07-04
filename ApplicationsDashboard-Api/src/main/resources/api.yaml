@@ -12,7 +12,65 @@ paths:
       operationId: ping
       summary: Application HealthCheck
       tags:
-        - info
+        - Info
       responses:
         200:
           description: Ok Object
+  /application:
+    get:
+      operationId: getApplications
+      summary: Result a list with all Applications
+      tags:
+        - Application
+      responses:
+        200:
+          description: List of applications
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Application'
+    post:
+      operationId: createApplication
+      summary: Create application
+      tags:
+        - Application
+      parameters:
+        - name: application
+          in: body
+          require: true
+          schema:
+            $ref: '#/definitions/ApplicationCreate'
+      responses:
+        201:
+          description: Application Created
+        405:
+          description: "Invalid input"
+
+definitions:
+  Application:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Application Unique Identifier
+      name:
+        type: string
+        description: Application Name
+      dns:
+        type: string
+        description: Application DNS (protocol must be present)
+      healthEndpoint:
+        type: string
+        description: Endpoint used to validate application healthy
+  ApplicationCreate:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Application Name
+      dns:
+        type: string
+        description: Application DNS (protocol must be present)
+      healthEndpoint:
+        type: string
+        description: Endpoint used to validate application healthy
