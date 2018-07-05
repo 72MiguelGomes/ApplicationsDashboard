@@ -34,6 +34,11 @@
       <artifactId>springfox-swagger-ui</artifactId>
       <version>${springfox-swagger2.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.apps.dashboard</groupId>
+      <artifactId>ApplicationsDashboard-Core</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
