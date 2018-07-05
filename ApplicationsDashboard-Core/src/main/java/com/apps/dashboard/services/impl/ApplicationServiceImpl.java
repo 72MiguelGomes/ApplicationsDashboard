@@ -5,8 +5,8 @@ import com.apps.dashboard.model.Application;
 import com.apps.dashboard.repositories.ApplicationRepo;
 import com.apps.dashboard.services.ApplicationService;
 import com.google.common.base.Preconditions;
+import java.util.Objects;
 import javax.annotation.Nonnull;
-import org.apache.commons.lang3.StringUtils;
 
 public class ApplicationServiceImpl implements ApplicationService {
 
@@ -26,16 +26,16 @@ public class ApplicationServiceImpl implements ApplicationService {
 
   @Override
   @Nonnull
-  public Application getApplicationById(@Nonnull String id) {
+  public Application getApplicationById(@Nonnull Long id) {
 
-    Preconditions.checkArgument(StringUtils.isNoneBlank(id), "ApplicationId must non blank String");
+    Preconditions.checkArgument(Objects.nonNull(id), "ApplicationId must not be null");
 
     return applicationRepo.getApplicationById(id).orElseThrow(EntityNotFoundException::new);
   }
 
   @Override
   @Nonnull
-  public Application updateApplication(@Nonnull String id, @Nonnull Application application) {
+  public Application updateApplication(@Nonnull Long id, @Nonnull Application application) {
 
     Application newApplication = getApplicationById(id).update(application);
 

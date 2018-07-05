@@ -7,6 +7,6 @@ public interface ApplicationRepo {
 
   void saveOrUpdate(Application application);
 
-  Optional<Application> getApplicationById(String id);
+  Optional<Application> getApplicationById(Long id);
 
 }

@@ -3,8 +3,8 @@ package com.apps.dashboard.services.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -13,7 +13,6 @@ import com.apps.dashboard.model.Application;
 import com.apps.dashboard.repositories.ApplicationRepo;
 import java.util.Optional;
 import name.falgout.jeffrey.testing.junit.mockito.MockitoExtension;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -58,9 +57,9 @@ public class ApplicationServiceImplTest {
    */
 
   @Test
-  public void testGetApplicationByIdEmptyId() {
+  public void testGetApplicationByIdNullId() {
 
-    final String applicationID = StringUtils.EMPTY;
+    final Long applicationID = null;
 
     assertThrows(IllegalArgumentException.class, () -> {
       applicationService.getApplicationById(applicationID);
@@ -70,9 +69,9 @@ public class ApplicationServiceImplTest {
   @Test
   public void testGetApplicationByIdNotFound() {
 
-    final String applicationID = "1234";
+    final Long applicationID = 1234L;
 
-    when(this.applicationRepo.getApplicationById(anyString())).thenReturn(Optional.empty());
+    when(this.applicationRepo.getApplicationById(any(Long.class))).thenReturn(Optional.empty());
 
     assertThrows(EntityNotFoundException.class, () -> {
       applicationService.getApplicationById(applicationID);
@@ -86,7 +85,7 @@ public class ApplicationServiceImplTest {
   @Test
   public void testUpdateApplication() {
 
-    final String appId = "123";
+    final Long appId = 123L;
     final String name = "finalName";
     final String dns = "http://localhost";
 

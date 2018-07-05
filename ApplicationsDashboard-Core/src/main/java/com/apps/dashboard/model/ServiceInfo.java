@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class ServiceInfo {
 
-  private String applicationId;
+  private Long applicationId;
 
   private boolean healthy;
 

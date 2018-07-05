@@ -8,9 +8,9 @@ public interface ApplicationService {
   void createApplication(@Nonnull Application application);
 
   @Nonnull
-  Application getApplicationById(@Nonnull String id);
+  Application getApplicationById(@Nonnull Long id);
 
   @Nonnull
-  Application updateApplication(@Nonnull String id, @Nonnull Application application);
+  Application updateApplication(@Nonnull Long id, @Nonnull Application application);
 
 }

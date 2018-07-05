@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class Application {
 
-  private String id;
+  private Long id;
 
   private String name;
 

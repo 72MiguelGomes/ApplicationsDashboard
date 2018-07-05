@@ -6,8 +6,8 @@ import javax.annotation.Nonnull;
 
 public interface ApplicationStatusService {
 
-  void updateApplicationStatus(@Nonnull String applicationId, @Nonnull ServiceInfo serviceInfo);
+  void updateApplicationStatus(@Nonnull Long applicationId, @Nonnull ServiceInfo serviceInfo);
 
-  Optional<ServiceInfo> getApplicationStatus(@Nonnull String applicationId);
+  Optional<ServiceInfo> getApplicationStatus(@Nonnull Long applicationId);
 
 }

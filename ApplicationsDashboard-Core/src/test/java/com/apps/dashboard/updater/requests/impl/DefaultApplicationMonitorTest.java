@@ -40,7 +40,7 @@ public class DefaultApplicationMonitorTest {
   @Test
   public void testCheckApplicationStatus() {
 
-    final String appId = "appId";
+    final Long appId = 1234L;
     final String dns = "https://localhost:8072";
     final String healthCheckEndpoint = "/test";
 
@@ -64,7 +64,7 @@ public class DefaultApplicationMonitorTest {
 
   @Test
   public void testCheckApplicationStatusWithTimeout() {
-    final String appId = "appId";
+    final Long appId = 1234L;
     final String dns = "https://localhost:8072";
     final String healthCheckEndpoint = "/test";
 
@@ -88,7 +88,7 @@ public class DefaultApplicationMonitorTest {
 
   @Test
   public void testCheckApplicationStatusWith503() {
-    final String appId = "appId";
+    final Long appId = 1234L;
     final String dns = "https://localhost:8072";
     final String healthCheckEndpoint = "/test";
 

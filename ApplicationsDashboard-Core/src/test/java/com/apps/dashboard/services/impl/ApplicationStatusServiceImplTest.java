@@ -13,7 +13,6 @@ import com.apps.dashboard.model.ServiceInfo;
 import com.apps.dashboard.repositories.ApplicationStatusRepo;
 import java.util.Optional;
 import name.falgout.jeffrey.testing.junit.mockito.MockitoExtension;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -35,7 +34,7 @@ public class ApplicationStatusServiceImplTest {
   @Test
   public void updateApplicationStatus() {
 
-    final String appId = "1234";
+    final Long appId = 1234L;
     final String appVersion = "v2";
     final boolean health = true;
 
@@ -69,10 +68,10 @@ public class ApplicationStatusServiceImplTest {
 
   @Test
   public void updateApplicationStatusWithNullValue() {
-    final String applicationID = StringUtils.EMPTY;
+    final Long applicationID = null;
 
     final ServiceInfo serviceInfo = ServiceInfo.builder()
-        .applicationId("1234")
+        .applicationId(1234L)
         .version("v1")
         .healthy(false)
         .build();
@@ -84,10 +83,10 @@ public class ApplicationStatusServiceImplTest {
 
   @Test
   public void updateApplicationStatusWithInvalidAppId() {
-    final String applicationID = "invalidId";
+    final Long applicationID = 100000L;
 
     final ServiceInfo serviceInfo = ServiceInfo.builder()
-        .applicationId("invalidId")
+        .applicationId(applicationID)
         .version("v1")
         .healthy(false)
         .build();
@@ -103,7 +102,7 @@ public class ApplicationStatusServiceImplTest {
   @Test
   public void testGetApplicationStatus() {
 
-    final String applicationID = "123";
+    final Long applicationID = 123L;
     final String appVersion = "v1";
     final boolean health = true;
 
@@ -128,8 +127,8 @@ public class ApplicationStatusServiceImplTest {
   }
 
   @Test
-  public void testGetApplicationStatusWithBlankId() {
-    final String applicationID = StringUtils.EMPTY;
+  public void testGetApplicationStatusWithNullId() {
+    final Long applicationID = null;
 
     assertThrows(IllegalArgumentException.class, () -> {
       applicationStatusService.getApplicationStatus(applicationID);
@@ -139,7 +138,7 @@ public class ApplicationStatusServiceImplTest {
   @Test
   public void testGetApplicationStatusWithNonExistentId() {
 
-    final String applicationID = "nonExistentId";
+    final Long applicationID = 100000L;
 
     when(this.applicationStatusRepo.getApplicationStatus(eq(applicationID)))
         .thenReturn(null);

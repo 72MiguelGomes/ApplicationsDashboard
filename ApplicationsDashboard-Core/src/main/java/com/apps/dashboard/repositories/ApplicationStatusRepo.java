@@ -6,6 +6,6 @@ public interface ApplicationStatusRepo {
 
   void updateApplicationStatus(ServiceInfo serviceInfo);
 
-  ServiceInfo getApplicationStatus(String applicationId);
+  ServiceInfo getApplicationStatus(Long applicationId);
 
 }
