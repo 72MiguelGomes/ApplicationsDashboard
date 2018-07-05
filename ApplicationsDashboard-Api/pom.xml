@@ -14,6 +14,8 @@
   <properties>
     <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
     <swagger-core.version>1.5.20</swagger-core.version>
+
+    <swagger.package>com.apps.dashboard</swagger.package>
   </properties>
 
   <dependencies>
@@ -48,6 +50,8 @@
             <configuration>
               <inputSpec>${project.basedir}/src/main/resources/api.yaml</inputSpec>
               <language>spring-mvc</language>
+              <apiPackage>${swagger.package}.api</apiPackage>
+              <modelPackage>${swagger.package}.api.model</modelPackage>
               <configOptions>
                 <sourceFolder>src/gen/java/main</sourceFolder>
               </configOptions>
