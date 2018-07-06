@@ -90,23 +90,6 @@
         <version>${jersey-client.version}</version>
       </dependency>
 
-      <!-- Logging -->
-      <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-api</artifactId>
-        <version>${log4j.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-core</artifactId>
-        <version>${log4j.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-slf4j-impl</artifactId>
-        <version>${log4j.version}</version>
-      </dependency>
-
 
       <!-- Internal Modules -->
       <dependency>
@@ -142,20 +125,6 @@
       <groupId>name.falgout.jeffrey.testing.junit5</groupId>
       <artifactId>mockito-extension</artifactId>
       <scope>test</scope>
-    </dependency>
-
-    <!-- Logging -->
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-slf4j-impl</artifactId>
     </dependency>
 
     <dependency>
