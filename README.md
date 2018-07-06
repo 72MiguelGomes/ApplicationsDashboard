@@ -1,4 +1,4 @@
-# ApplicationsDashboard [![Build Status](https://travis-ci.org/72MiguelGomes/ApplicationsDashboard.svg?branch=master)](https://travis-ci.org/72MiguelGomes/ApplicationsDashboard)
+# ApplicationsDashboard [![Build Status](https://travis-ci.org/72MiguelGomes/ApplicationsDashboard.svg?branch=master)](https://travis-ci.org/72MiguelGomes/ApplicationsDashboard) [![codecov](https://codecov.io/gh/72MiguelGomes/ApplicationsDashboard/branch/master/graph/badge.svg)](https://codecov.io/gh/72MiguelGomes/ApplicationsDashboard)
 
 Application responsible to validate the healthy of services.
 
