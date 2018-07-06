@@ -8,11 +8,15 @@ import com.google.common.base.Preconditions;
 import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ApplicationStatusServiceImpl implements ApplicationStatusService {
 
   private ApplicationStatusRepo applicationStatusRepo;
 
+  @Autowired
   public ApplicationStatusServiceImpl(
       ApplicationStatusRepo applicationStatusRepo) {
     this.applicationStatusRepo = applicationStatusRepo;

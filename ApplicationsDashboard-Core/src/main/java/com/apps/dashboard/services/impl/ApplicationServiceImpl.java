@@ -7,11 +7,15 @@ import com.apps.dashboard.services.ApplicationService;
 import com.google.common.base.Preconditions;
 import java.util.Objects;
 import javax.annotation.Nonnull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ApplicationServiceImpl implements ApplicationService {
 
   private ApplicationRepo applicationRepo;
 
+  @Autowired
   public ApplicationServiceImpl(ApplicationRepo applicationRepo) {
     this.applicationRepo = applicationRepo;
   }

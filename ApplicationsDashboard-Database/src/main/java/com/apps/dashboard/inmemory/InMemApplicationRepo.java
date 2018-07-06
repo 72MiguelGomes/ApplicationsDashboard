@@ -5,7 +5,9 @@ import com.apps.dashboard.repositories.ApplicationRepo;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.stereotype.Component;
 
+@Component
 public class InMemApplicationRepo implements ApplicationRepo {
 
   private Map<Long, Application> applicationMap = new HashMap<>();
