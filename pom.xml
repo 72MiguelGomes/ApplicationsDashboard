@@ -20,6 +20,7 @@
     <module>ApplicationsDashboard-Core</module>
     <module>ApplicationsDashboard-Api</module>
     <module>ApplicationsDashboard-Database</module>
+    <module>ApplicationsDashboard-Starter</module>
   </modules>
 
   <properties>
