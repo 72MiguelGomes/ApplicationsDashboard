@@ -1,7 +1,9 @@
 language: java
 jdk:
  - oraclejdk8
-script: mvn clean verify
+script: |
+  export MAVEN_SKIP_RC=true
 
+  mvn clean verify
 after_success:
   - bash <(curl -s https://codecov.io/bash)
