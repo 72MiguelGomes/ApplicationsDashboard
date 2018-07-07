@@ -5,6 +5,7 @@ import com.apps.dashboard.model.Application;
 import com.apps.dashboard.repositories.ApplicationRepo;
 import com.apps.dashboard.services.ApplicationService;
 import com.google.common.base.Preconditions;
+import java.util.Collection;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,12 @@ public class ApplicationServiceImpl implements ApplicationService {
     // TODO: Validate Application
 
     applicationRepo.saveOrUpdate(application);
+  }
+
+  @Nonnull
+  @Override
+  public Collection<Application> getAllApplications() {
+    return this.applicationRepo.getAllApplications();
   }
 
   @Override

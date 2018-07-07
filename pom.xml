@@ -43,6 +43,7 @@
 
     <!-- Logging -->
     <log4j.version>2.7</log4j.version>
+    <modelmapper.version>2.1.0</modelmapper.version>
   </properties>
 
   <dependencyManagement>
@@ -62,6 +63,11 @@
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
         <version>${guava.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.modelmapper</groupId>
+        <artifactId>modelmapper</artifactId>
+        <version>${modelmapper.version}</version>
       </dependency>
 
       <!-- Tests -->
