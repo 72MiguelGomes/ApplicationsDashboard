@@ -24,6 +24,14 @@ public class Application {
         .build();
   }
 
+  public ApplicationBuilder update() {
+    return Application.builder()
+        .id(this.id)
+        .name(this.name)
+        .dns(this.dns)
+        .healthEndpoint(this.healthEndpoint);
+  }
+
   public String getHealthCheckUrl() {
     return this.dns + this.healthEndpoint;
   }

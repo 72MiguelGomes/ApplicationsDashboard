@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface ApplicationRepo {
 
-  void saveOrUpdate(Application application);
+  Application saveOrUpdate(Application application);
 
   Optional<Application> getApplicationById(Long id);
 

@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,9 +14,24 @@ public class InMemApplicationRepo implements ApplicationRepo {
 
   private Map<Long, Application> applicationMap = new HashMap<>();
 
+  private volatile AtomicLong nextAppId = new AtomicLong(1);
+
   @Override
-  public void saveOrUpdate(Application application) {
-    applicationMap.put(application.getId(), application);
+  public Application saveOrUpdate(Application application) {
+
+    Application savedApp = application;
+
+    if (application.getId() == null) {
+      Long appId = nextAppId.getAndIncrement();
+
+      savedApp = application.update()
+          .id(appId)
+          .build();
+    }
+
+    applicationMap.put(savedApp.getId(), savedApp);
+
+    return savedApp;
   }
 
   @Override
