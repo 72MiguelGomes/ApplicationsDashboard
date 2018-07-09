@@ -22,11 +22,11 @@ public class ApplicationServiceImpl implements ApplicationService {
   }
 
   @Override
-  public void createApplication(@Nonnull Application application) {
+  public Application createApplication(@Nonnull Application application) {
 
     // TODO: Validate Application
 
-    applicationRepo.saveOrUpdate(application);
+    return applicationRepo.saveOrUpdate(application);
   }
 
   @Nonnull

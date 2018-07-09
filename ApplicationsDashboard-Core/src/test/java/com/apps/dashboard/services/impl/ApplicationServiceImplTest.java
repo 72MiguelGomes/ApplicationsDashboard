@@ -1,6 +1,7 @@
 package com.apps.dashboard.services.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -48,6 +49,7 @@ public class ApplicationServiceImplTest {
     verify(this.applicationRepo).saveOrUpdate(applicationArgumentCaptor.capture());
     Application capturedApplication = applicationArgumentCaptor.getValue();
 
+    assertNull(capturedApplication.getId());
     assertEquals(name, capturedApplication.getName());
     assertEquals(dns, capturedApplication.getDns());
   }

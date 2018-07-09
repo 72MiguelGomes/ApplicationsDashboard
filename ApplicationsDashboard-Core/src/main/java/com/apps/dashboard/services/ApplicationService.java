@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
 
 public interface ApplicationService {
 
-  void createApplication(@Nonnull Application application);
+  Application createApplication(@Nonnull Application application);
 
   @Nonnull
   Collection<Application> getAllApplications();
