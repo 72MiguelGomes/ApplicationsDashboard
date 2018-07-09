@@ -5,6 +5,7 @@ import com.apps.dashboard.api.NotFoundException;
 import com.apps.dashboard.api.model.Application;
 import com.apps.dashboard.api.model.ApplicationCreate;
 import com.apps.dashboard.services.ApplicationService;
+import java.net.URI;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Controller
 public class ApplicationController implements ApplicationApi {
@@ -41,6 +43,19 @@ public class ApplicationController implements ApplicationApi {
   @Override
   public Callable<ResponseEntity<Void>> createApplication(ApplicationCreate application)
       throws NotFoundException {
-    return null;
+
+    return () -> {
+      com.apps.dashboard.model.Application newApp = this.modelMapper.map(application, com.apps.dashboard.model.Application.class);
+
+      com.apps.dashboard.model.Application createdApp = this.applicationService.createApplication(newApp);
+
+      URI location = ServletUriComponentsBuilder
+          .fromCurrentRequest()
+          .path("/{id}")
+          .buildAndExpand(createdApp.getId())
+          .toUri();
+
+      return ResponseEntity.created(location).build();
+    };
   }
 }
