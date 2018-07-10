@@ -4,6 +4,7 @@ import com.apps.dashboard.api.ApplicationApi;
 import com.apps.dashboard.api.NotFoundException;
 import com.apps.dashboard.api.model.Application;
 import com.apps.dashboard.api.model.ApplicationCreate;
+import com.apps.dashboard.mappers.ApplicationMapper;
 import com.apps.dashboard.services.ApplicationService;
 import java.net.URI;
 import java.util.List;
@@ -42,11 +43,10 @@ public class ApplicationController implements ApplicationApi {
   }
 
   @Override
-  public Callable<ResponseEntity<Void>> createApplication(@RequestBody ApplicationCreate application)
-      throws NotFoundException {
+  public Callable<ResponseEntity<Void>> createApplication(@RequestBody ApplicationCreate application) {
 
     return () -> {
-      com.apps.dashboard.model.Application newApp = convert(application);
+      com.apps.dashboard.model.Application newApp = ApplicationMapper.convert(application);
 
       com.apps.dashboard.model.Application createdApp = this.applicationService.createApplication(newApp);
 
@@ -58,13 +58,5 @@ public class ApplicationController implements ApplicationApi {
 
       return ResponseEntity.created(location).build();
     };
-  }
-
-  private com.apps.dashboard.model.Application convert(ApplicationCreate application) {
-    return com.apps.dashboard.model.Application.builder()
-        .name(application.getName())
-        .dns(application.getDns())
-        .healthEndpoint(application.getHealthEndpoint())
-        .build();
   }
 }
