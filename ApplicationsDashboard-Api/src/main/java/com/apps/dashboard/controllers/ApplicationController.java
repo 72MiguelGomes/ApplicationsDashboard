@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Controller
@@ -41,11 +42,11 @@ public class ApplicationController implements ApplicationApi {
   }
 
   @Override
-  public Callable<ResponseEntity<Void>> createApplication(ApplicationCreate application)
+  public Callable<ResponseEntity<Void>> createApplication(@RequestBody ApplicationCreate application)
       throws NotFoundException {
 
     return () -> {
-      com.apps.dashboard.model.Application newApp = this.modelMapper.map(application, com.apps.dashboard.model.Application.class);
+      com.apps.dashboard.model.Application newApp = convert(application);
 
       com.apps.dashboard.model.Application createdApp = this.applicationService.createApplication(newApp);
 
@@ -57,5 +58,13 @@ public class ApplicationController implements ApplicationApi {
 
       return ResponseEntity.created(location).build();
     };
+  }
+
+  private com.apps.dashboard.model.Application convert(ApplicationCreate application) {
+    return com.apps.dashboard.model.Application.builder()
+        .name(application.getName())
+        .dns(application.getDns())
+        .healthEndpoint(application.getHealthEndpoint())
+        .build();
   }
 }
