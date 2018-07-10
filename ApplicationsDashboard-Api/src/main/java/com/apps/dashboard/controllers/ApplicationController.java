@@ -1,7 +1,6 @@
 package com.apps.dashboard.controllers;
 
 import com.apps.dashboard.api.ApplicationApi;
-import com.apps.dashboard.api.NotFoundException;
 import com.apps.dashboard.api.model.Application;
 import com.apps.dashboard.api.model.ApplicationCreate;
 import com.apps.dashboard.mappers.ApplicationMapper;
@@ -32,7 +31,7 @@ public class ApplicationController implements ApplicationApi {
   }
 
   @Override
-  public Callable<ResponseEntity<List<Application>>> getApplications() throws NotFoundException {
+  public Callable<ResponseEntity<List<Application>>> getApplications() {
     return () ->
       ResponseEntity.ok(
           this.applicationService.getAllApplications()

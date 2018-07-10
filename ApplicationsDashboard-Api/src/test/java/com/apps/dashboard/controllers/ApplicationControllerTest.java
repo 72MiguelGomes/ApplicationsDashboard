@@ -9,11 +9,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.apps.dashboard.api.model.ApplicationCreate;
 import com.apps.dashboard.model.Application;
 import com.apps.dashboard.services.ApplicationService;
+import com.google.common.collect.Sets;
 import com.google.gson.Gson;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -32,6 +39,65 @@ public class ApplicationControllerTest {
 
   @MockBean
   private ApplicationService applicationService;
+
+
+  /**
+   * Test getApplications
+   */
+  @Test
+  public void testGetApplications() throws Exception {
+
+    final Set<Long> applicationIds = Sets.newHashSet(1L, 2L, 3L);
+    final String name = "AppName";
+    final String dns = "http://localhost";
+    final String healthCheck = "/ping";
+
+    List<Application> applicationList = createDummyApps(applicationIds,
+        name,
+        dns,
+        healthCheck);
+
+    Mockito.when(applicationService.getAllApplications())
+        .thenReturn(applicationList);
+
+    MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/application")
+        .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(request().asyncStarted())
+        .andReturn();
+
+    this.mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
+        .andExpect(MockMvcResultMatchers.status().isOk());
+
+    String jsonResult = mvcResult.getResponse().getContentAsString();
+
+    List<Application> result = new Gson().fromJson(jsonResult, new TypeToken<List<Application>>(){}.getType());
+
+    Assertions.assertEquals(applicationIds.size(), result.size());
+
+    result.forEach(app -> {
+              Assertions.assertTrue(applicationIds.contains(app.getId()));
+              Assertions.assertEquals(name, app.getName());
+              Assertions.assertEquals(dns, app.getDns());
+              Assertions.assertEquals(healthCheck, app.getHealthEndpoint());
+            });
+  }
+
+  private List<Application> createDummyApps(Set<Long> applicationIds,
+      String name,
+      String dns,
+      String healthCheck) {
+
+    return applicationIds.stream()
+        .map(appId ->
+          Application.builder()
+              .id(appId)
+              .name(name)
+              .dns(dns)
+              .healthEndpoint(healthCheck)
+              .build()
+        )
+        .collect(Collectors.toList());
+  }
 
   /**
    * Test createApplication
@@ -76,5 +142,4 @@ public class ApplicationControllerTest {
         .andExpect(MockMvcResultMatchers.header()
             .string("Location", "http://localhost/application/" + appId));
   }
-
 }
