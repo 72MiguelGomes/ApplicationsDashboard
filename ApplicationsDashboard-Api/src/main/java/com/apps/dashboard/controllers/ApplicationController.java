@@ -3,6 +3,7 @@ package com.apps.dashboard.controllers;
 import com.apps.dashboard.api.ApplicationApi;
 import com.apps.dashboard.api.model.Application;
 import com.apps.dashboard.api.model.ApplicationCreate;
+import com.apps.dashboard.api.model.ApplicationUpdate;
 import com.apps.dashboard.exceptions.EntityNotFoundException;
 import com.apps.dashboard.mappers.ApplicationMapper;
 import com.apps.dashboard.services.ApplicationService;
@@ -35,19 +36,20 @@ public class ApplicationController implements ApplicationApi {
   @Override
   public Callable<ResponseEntity<List<Application>>> getApplications() {
     return () ->
-      ResponseEntity.ok(
-          this.applicationService.getAllApplications()
-              .stream()
-              .map(app -> this.modelMapper.map(app, Application.class))
-              .collect(Collectors.toList())
-      );
+        ResponseEntity.ok(
+            this.applicationService.getAllApplications()
+                .stream()
+                .map(app -> this.modelMapper.map(app, Application.class))
+                .collect(Collectors.toList())
+        );
   }
 
   @Override
   public Callable<ResponseEntity<Application>> getApplication(@PathVariable("appId") Long appId) {
     return () -> {
       try {
-        com.apps.dashboard.model.Application application = this.applicationService.getApplicationById(appId);
+        com.apps.dashboard.model.Application application = this.applicationService
+            .getApplicationById(appId);
 
         return ResponseEntity.ok(this.modelMapper.map(application, Application.class));
 
@@ -59,12 +61,14 @@ public class ApplicationController implements ApplicationApi {
   }
 
   @Override
-  public Callable<ResponseEntity<Void>> createApplication(@RequestBody ApplicationCreate application) {
+  public Callable<ResponseEntity<Void>> createApplication(
+      @RequestBody ApplicationCreate application) {
 
     return () -> {
       com.apps.dashboard.model.Application newApp = ApplicationMapper.convert(application);
 
-      com.apps.dashboard.model.Application createdApp = this.applicationService.createApplication(newApp);
+      com.apps.dashboard.model.Application createdApp = this.applicationService
+          .createApplication(newApp);
 
       URI location = ServletUriComponentsBuilder
           .fromCurrentRequest()
@@ -73,6 +77,30 @@ public class ApplicationController implements ApplicationApi {
           .toUri();
 
       return ResponseEntity.created(location).build();
+    };
+  }
+
+  @Override
+  public Callable<ResponseEntity<Void>> updateApplication(@PathVariable("appId") Long appId,
+      @RequestBody ApplicationUpdate application) {
+    return () -> {
+      try {
+      com.apps.dashboard.model.Application appToUpdate = ApplicationMapper.convert(application);
+
+      com.apps.dashboard.model.Application updatedApp = this.applicationService
+          .updateApplication(appId, appToUpdate);
+
+      URI location = ServletUriComponentsBuilder
+          .fromCurrentRequest()
+          .path("/{id}")
+          .buildAndExpand(updatedApp.getId())
+          .toUri();
+
+      return ResponseEntity.noContent().location(location).build();
+      } catch (EntityNotFoundException e) {
+        //TODO: Change this to use spring MVC Exception Handler
+        return ResponseEntity.notFound().build();
+      }
     };
   }
 }
