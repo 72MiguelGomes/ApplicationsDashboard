@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -39,6 +40,15 @@ public class ApplicationController implements ApplicationApi {
               .map(app -> this.modelMapper.map(app, Application.class))
               .collect(Collectors.toList())
       );
+  }
+
+  @Override
+  public Callable<ResponseEntity<Application>> getApplication(@PathVariable("appId") Long appId) {
+    return () -> {
+      com.apps.dashboard.model.Application application = this.applicationService.getApplicationById(appId);
+
+      return ResponseEntity.ok(this.modelMapper.map(application, Application.class));
+    };
   }
 
   @Override
