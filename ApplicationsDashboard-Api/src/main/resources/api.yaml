@@ -45,6 +45,27 @@ paths:
           description: Application Created
         405:
           description: "Invalid input"
+  /application/{appId}:
+    get:
+      operationId: getApplication
+      summary: Return Application Data
+      tags:
+        - Application
+      parameters:
+        - name: appId
+          type: integer
+          format: int64
+          description: Application Identifier
+          in: path
+          required: true
+      responses:
+        200:
+          description: Application Info
+          schema:
+            type: object
+            $ref: '#/definitions/Application'
+        404:
+          description: Application Not Found
 
 definitions:
   Application:
