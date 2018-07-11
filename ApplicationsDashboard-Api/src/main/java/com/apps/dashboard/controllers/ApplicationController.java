@@ -87,13 +87,11 @@ public class ApplicationController implements ApplicationApi {
       try {
       com.apps.dashboard.model.Application appToUpdate = ApplicationMapper.convert(application);
 
-      com.apps.dashboard.model.Application updatedApp = this.applicationService
-          .updateApplication(appId, appToUpdate);
+      this.applicationService.updateApplication(appId, appToUpdate);
 
       URI location = ServletUriComponentsBuilder
           .fromCurrentRequest()
-          .path("/{id}")
-          .buildAndExpand(updatedApp.getId())
+          .build()
           .toUri();
 
       return ResponseEntity.noContent().location(location).build();
