@@ -1,13 +1,14 @@
 package com.apps.dashboard.controllers;
 
 import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.apps.dashboard.api.model.ApplicationCreate;
+import com.apps.dashboard.exceptions.EntityNotFoundException;
 import com.apps.dashboard.model.Application;
 import com.apps.dashboard.services.ApplicationService;
 import com.google.common.collect.Sets;
@@ -180,5 +181,22 @@ public class ApplicationControllerTest {
     assertEquals(name, result.getName());
     assertEquals(dns, result.getDns());
     assertEquals(healthCheck, result.getHealthEndpoint());
+  }
+
+  @Test
+  public void testGetApplicationNotFound() throws Exception {
+
+    final Long appId = 10L;
+
+    Mockito.when(this.applicationService.getApplicationById(Mockito.eq(appId)))
+        .thenThrow(EntityNotFoundException.class);
+
+    MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/application/" + appId)
+        .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(request().asyncStarted())
+        .andReturn();
+
+    this.mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 }

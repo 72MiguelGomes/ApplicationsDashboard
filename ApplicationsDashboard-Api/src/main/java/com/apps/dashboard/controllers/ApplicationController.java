@@ -3,6 +3,7 @@ package com.apps.dashboard.controllers;
 import com.apps.dashboard.api.ApplicationApi;
 import com.apps.dashboard.api.model.Application;
 import com.apps.dashboard.api.model.ApplicationCreate;
+import com.apps.dashboard.exceptions.EntityNotFoundException;
 import com.apps.dashboard.mappers.ApplicationMapper;
 import com.apps.dashboard.services.ApplicationService;
 import java.net.URI;
@@ -45,9 +46,15 @@ public class ApplicationController implements ApplicationApi {
   @Override
   public Callable<ResponseEntity<Application>> getApplication(@PathVariable("appId") Long appId) {
     return () -> {
-      com.apps.dashboard.model.Application application = this.applicationService.getApplicationById(appId);
+      try {
+        com.apps.dashboard.model.Application application = this.applicationService.getApplicationById(appId);
 
-      return ResponseEntity.ok(this.modelMapper.map(application, Application.class));
+        return ResponseEntity.ok(this.modelMapper.map(application, Application.class));
+
+      } catch (EntityNotFoundException e) {
+        //TODO: Change this to use spring MVC Exception Handler
+        return ResponseEntity.notFound().build();
+      }
     };
   }
 
