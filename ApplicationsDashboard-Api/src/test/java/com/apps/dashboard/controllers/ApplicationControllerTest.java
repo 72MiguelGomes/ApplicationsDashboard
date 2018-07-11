@@ -1,10 +1,11 @@
 package com.apps.dashboard.controllers;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.apps.dashboard.api.model.ApplicationCreate;
 import com.apps.dashboard.model.Application;
@@ -141,5 +142,43 @@ public class ApplicationControllerTest {
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.header()
             .string("Location", "http://localhost/application/" + appId));
+  }
+
+  /**
+   * Test getApplication
+   */
+  @Test
+  public void testGetApplication() throws Exception {
+    final String name = "AppName";
+    final String dns = "http://localhost";
+    final String healthCheck = "/ping";
+    final Long appId = 12345L;
+
+    Application application = Application.builder()
+        .id(appId)
+        .name(name)
+        .dns(dns)
+        .healthEndpoint(healthCheck)
+        .build();
+
+    Mockito.when(applicationService.getApplicationById(eq(appId)))
+        .thenReturn(application);
+
+    MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/application/" + appId)
+        .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(request().asyncStarted())
+        .andReturn();
+
+    this.mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
+        .andExpect(MockMvcResultMatchers.status().isOk());
+
+    String jsonResult = mvcResult.getResponse().getContentAsString();
+
+    com.apps.dashboard.api.model.Application result = new Gson().fromJson(jsonResult, com.apps.dashboard.api.model.Application.class);
+
+    assertEquals(appId.toString(), result.getId());
+    assertEquals(name, result.getName());
+    assertEquals(dns, result.getDns());
+    assertEquals(healthCheck, result.getHealthEndpoint());
   }
 }
