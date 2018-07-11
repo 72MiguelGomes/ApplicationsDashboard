@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 
 import com.apps.dashboard.api.model.ApplicationCreate;
+import com.apps.dashboard.api.model.ApplicationUpdate;
 import com.apps.dashboard.exceptions.EntityNotFoundException;
 import com.apps.dashboard.model.Application;
 import com.apps.dashboard.services.ApplicationService;
@@ -199,4 +200,77 @@ public class ApplicationControllerTest {
     this.mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
+
+  /**
+   * Test updateApplication
+   */
+  @Test
+  public void testUpdateApplication() throws Exception {
+
+    final String name = "AppName";
+    final String dns = "http://localhost";
+    final String healthCheck = "/ping";
+    final Long appId = 123L;
+
+    when(this.applicationService
+        .updateApplication(eq(appId), any(com.apps.dashboard.model.Application.class)))
+        .then((Answer<Application>) invocationOnMock -> {
+
+          Application application = invocationOnMock.getArgument(1);
+
+          assertEquals(name, application.getName());
+          assertEquals(dns, application.getDns());
+          assertEquals(healthCheck, application.getHealthEndpoint());
+          assertNull(application.getId());
+
+          return application.update()
+              .id(appId)
+              .build();
+        });
+
+    ApplicationUpdate applicationUpdate = new ApplicationUpdate();
+    applicationUpdate.setName(name);
+    applicationUpdate.setDns(dns);
+    applicationUpdate.setHealthEndpoint(healthCheck);
+
+    MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/application/" + appId)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(new Gson().toJson(applicationUpdate)))
+        .andExpect(request().asyncStarted())
+        .andReturn();
+
+    this.mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
+        .andExpect(MockMvcResultMatchers.status().isNoContent())
+        .andExpect(MockMvcResultMatchers.header()
+            .string("Location", "http://localhost/application/" + appId));
+
+  }
+
+  @Test
+  public void testUpdateApplicationThatNotExist() throws Exception {
+
+    final String name = "AppName";
+    final String dns = "http://localhost";
+    final String healthCheck = "/ping";
+    final Long appId = 123L;
+
+    when(this.applicationService
+        .updateApplication(eq(appId), any(com.apps.dashboard.model.Application.class)))
+        .thenThrow(EntityNotFoundException.class);
+
+    ApplicationUpdate applicationUpdate = new ApplicationUpdate();
+    applicationUpdate.setName(name);
+    applicationUpdate.setDns(dns);
+    applicationUpdate.setHealthEndpoint(healthCheck);
+
+    MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/application/" + appId)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(new Gson().toJson(applicationUpdate)))
+        .andExpect(request().asyncStarted())
+        .andReturn();
+
+    this.mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
 }

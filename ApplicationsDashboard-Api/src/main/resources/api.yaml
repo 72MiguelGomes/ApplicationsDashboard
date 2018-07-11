@@ -66,6 +66,28 @@ paths:
             $ref: '#/definitions/Application'
         404:
           description: Application Not Found
+    put:
+      operationId: updateApplication
+      summary: Update application
+      tags:
+        - Application
+      parameters:
+        - name: appId
+          type: integer
+          format: int64
+          description: Application Identifier
+          in: path
+          required: true
+        - name: application
+          in: body
+          require: true
+          schema:
+            $ref: '#/definitions/ApplicationUpdate'
+      responses:
+        204:
+          description: Application Updated
+        404:
+          description: "Invalid input"
 
 definitions:
   Application:
@@ -84,6 +106,18 @@ definitions:
         type: string
         description: Endpoint used to validate application healthy
   ApplicationCreate:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Application Name
+      dns:
+        type: string
+        description: Application DNS (protocol must be present)
+      healthEndpoint:
+        type: string
+        description: Endpoint used to validate application healthy
+  ApplicationUpdate:
     type: object
     properties:
       name:
