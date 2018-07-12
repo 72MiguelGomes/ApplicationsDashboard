@@ -4,9 +4,11 @@ import com.apps.dashboard.api.ApplicationApi;
 import com.apps.dashboard.api.model.Application;
 import com.apps.dashboard.api.model.ApplicationCreate;
 import com.apps.dashboard.api.model.ApplicationUpdate;
+import com.apps.dashboard.api.model.ServiceInfo;
 import com.apps.dashboard.exceptions.EntityNotFoundException;
 import com.apps.dashboard.mappers.ApplicationMapper;
 import com.apps.dashboard.services.ApplicationService;
+import com.apps.dashboard.services.ApplicationStatusService;
 import java.net.URI;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -22,14 +24,17 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @Controller
 public class ApplicationController implements ApplicationApi {
 
-  private ApplicationService applicationService;
+  private final ApplicationService applicationService;
 
-  private ModelMapper modelMapper;
+  private final ApplicationStatusService applicationStatusService;
+
+  private final ModelMapper modelMapper;
 
   @Autowired
   public ApplicationController(ApplicationService applicationService,
-      ModelMapper modelMapper) {
+      ApplicationStatusService applicationStatusService, ModelMapper modelMapper) {
     this.applicationService = applicationService;
+    this.applicationStatusService = applicationStatusService;
     this.modelMapper = modelMapper;
   }
 
@@ -85,20 +90,35 @@ public class ApplicationController implements ApplicationApi {
       @RequestBody ApplicationUpdate application) {
     return () -> {
       try {
-      com.apps.dashboard.model.Application appToUpdate = ApplicationMapper.convert(application);
+        com.apps.dashboard.model.Application appToUpdate = ApplicationMapper.convert(application);
 
-      this.applicationService.updateApplication(appId, appToUpdate);
+        this.applicationService.updateApplication(appId, appToUpdate);
 
-      URI location = ServletUriComponentsBuilder
-          .fromCurrentRequest()
-          .build()
-          .toUri();
+        URI location = ServletUriComponentsBuilder
+            .fromCurrentRequest()
+            .build()
+            .toUri();
 
-      return ResponseEntity.noContent().location(location).build();
+        return ResponseEntity.noContent().location(location).build();
       } catch (EntityNotFoundException e) {
         //TODO: Change this to use spring MVC Exception Handler
         return ResponseEntity.notFound().build();
       }
     };
+  }
+
+  @Override
+  public Callable<ResponseEntity<ServiceInfo>> getServiceInfo(@PathVariable("appId") Long appId) {
+
+    return () ->
+        this.applicationStatusService
+            .getApplicationStatus(appId)
+            .map(
+                serviceInfo -> ResponseEntity
+                    .ok(this.modelMapper.map(serviceInfo, ServiceInfo.class))
+            )
+            .orElseGet(
+                () -> ResponseEntity.notFound().build()
+            );
   }
 }

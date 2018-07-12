@@ -88,7 +88,6 @@ paths:
           description: Application Updated
         404:
           description: "Invalid input"
-
   /application/{appId}/serviceInfo:
     get:
       operationId: getServiceInfo
