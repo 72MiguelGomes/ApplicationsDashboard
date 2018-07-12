@@ -89,6 +89,26 @@ paths:
         404:
           description: "Invalid input"
 
+  /application/{appId}/serviceInfo:
+    get:
+      operationId: getServiceInfo
+      summary: Return Service Information
+      tags:
+        - ServiceInfo
+      parameters:
+        - name: appId
+          type: integer
+          format: int64
+          description: Application Identifier
+          in: path
+          required: true
+      responses:
+        200:
+          description: Service Info
+          schema:
+            type: object
+            $ref: '#/definitions/ServiceInfo'
+
 definitions:
   Application:
     type: object
@@ -129,3 +149,13 @@ definitions:
       healthEndpoint:
         type: string
         description: Endpoint used to validate application healthy
+
+  ServiceInfo:
+    type: object
+    properties:
+      healthy:
+        type: boolean
+        description: Application Health Status
+      version:
+        type: string
+        description: Service Version
