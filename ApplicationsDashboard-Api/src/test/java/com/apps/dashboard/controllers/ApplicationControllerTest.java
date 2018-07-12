@@ -11,10 +11,13 @@ import com.apps.dashboard.api.model.ApplicationCreate;
 import com.apps.dashboard.api.model.ApplicationUpdate;
 import com.apps.dashboard.exceptions.EntityNotFoundException;
 import com.apps.dashboard.model.Application;
+import com.apps.dashboard.model.ServiceInfo;
 import com.apps.dashboard.services.ApplicationService;
+import com.apps.dashboard.services.ApplicationStatusService;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
@@ -43,6 +46,8 @@ public class ApplicationControllerTest {
   @MockBean
   private ApplicationService applicationService;
 
+  @MockBean
+  private ApplicationStatusService applicationStatusService;
 
   /**
    * Test getApplications
@@ -266,6 +271,58 @@ public class ApplicationControllerTest {
     MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/application/" + appId)
         .contentType(MediaType.APPLICATION_JSON)
         .content(new Gson().toJson(applicationUpdate)))
+        .andExpect(request().asyncStarted())
+        .andReturn();
+
+    this.mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  /**
+   * Test getServiceInfo
+   */
+  @Test
+  public void testGetServiceInfo() throws Exception {
+
+    final Long appId = 123L;
+    final boolean healthy = false;
+    final String version = "v2";
+
+    ServiceInfo serviceInfo = ServiceInfo.builder()
+        .applicationId(appId)
+        .healthy(healthy)
+        .version(version)
+        .build();
+
+    Mockito.when(this.applicationStatusService.getApplicationStatus(eq(appId)))
+        .thenReturn(Optional.of(serviceInfo));
+
+    MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/application/" + appId + "/serviceInfo")
+        .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(request().asyncStarted())
+        .andReturn();
+
+    this.mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
+        .andExpect(MockMvcResultMatchers.status().isOk());
+
+    String jsonResult = mvcResult.getResponse().getContentAsString();
+
+    com.apps.dashboard.api.model.ServiceInfo result = new Gson().fromJson(jsonResult, com.apps.dashboard.api.model.ServiceInfo.class);
+
+    assertEquals(healthy, result.getHealthy());
+    assertEquals(version, result.getVersion());
+  }
+
+  @Test
+  public void testGetServiceInfoNotFound() throws Exception {
+
+    final Long appId = 10L;
+
+    Mockito.when(this.applicationStatusService.getApplicationStatus(Mockito.eq(appId)))
+        .thenReturn(Optional.empty());
+
+    MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/application/" + appId + "/serviceInfo")
+        .contentType(MediaType.APPLICATION_JSON))
         .andExpect(request().asyncStarted())
         .andReturn();
 
