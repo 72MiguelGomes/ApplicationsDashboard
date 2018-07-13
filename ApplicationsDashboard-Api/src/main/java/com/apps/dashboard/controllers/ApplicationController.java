@@ -13,12 +13,17 @@ import java.net.URI;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Controller
@@ -52,16 +57,10 @@ public class ApplicationController implements ApplicationApi {
   @Override
   public Callable<ResponseEntity<Application>> getApplication(@PathVariable("appId") Long appId) {
     return () -> {
-      try {
-        com.apps.dashboard.model.Application application = this.applicationService
-            .getApplicationById(appId);
+      com.apps.dashboard.model.Application application = this.applicationService
+          .getApplicationById(appId);
 
-        return ResponseEntity.ok(this.modelMapper.map(application, Application.class));
-
-      } catch (EntityNotFoundException e) {
-        //TODO: Change this to use spring MVC Exception Handler
-        return ResponseEntity.notFound().build();
-      }
+      return ResponseEntity.ok(this.modelMapper.map(application, Application.class));
     };
   }
 
@@ -89,21 +88,16 @@ public class ApplicationController implements ApplicationApi {
   public Callable<ResponseEntity<Void>> updateApplication(@PathVariable("appId") Long appId,
       @RequestBody ApplicationUpdate application) {
     return () -> {
-      try {
-        com.apps.dashboard.model.Application appToUpdate = ApplicationMapper.convert(application);
+      com.apps.dashboard.model.Application appToUpdate = ApplicationMapper.convert(application);
 
-        this.applicationService.updateApplication(appId, appToUpdate);
+      this.applicationService.updateApplication(appId, appToUpdate);
 
-        URI location = ServletUriComponentsBuilder
-            .fromCurrentRequest()
-            .build()
-            .toUri();
+      URI location = ServletUriComponentsBuilder
+          .fromCurrentRequest()
+          .build()
+          .toUri();
 
-        return ResponseEntity.noContent().location(location).build();
-      } catch (EntityNotFoundException e) {
-        //TODO: Change this to use spring MVC Exception Handler
-        return ResponseEntity.notFound().build();
-      }
+      return ResponseEntity.noContent().location(location).build();
     };
   }
 
@@ -120,5 +114,12 @@ public class ApplicationController implements ApplicationApi {
             .orElseGet(
                 () -> ResponseEntity.notFound().build()
             );
+  }
+
+  @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Application Not Found")
+  @ExceptionHandler(EntityNotFoundException.class)
+  public @ResponseBody
+  Callable<ResponseEntity> exceptionHandler(HttpServletRequest httpServletRequest, Exception ex) {
+    return () -> ResponseEntity.notFound().build();
   }
 }
