@@ -20,6 +20,10 @@
       <groupId>com.apps.dashboard</groupId>
       <artifactId>ApplicationsDashboard-Core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.apps.dashboard</groupId>
+      <artifactId>ApplicationsDashboard-Api</artifactId>
+    </dependency>
   </dependencies>
 
 </project>
