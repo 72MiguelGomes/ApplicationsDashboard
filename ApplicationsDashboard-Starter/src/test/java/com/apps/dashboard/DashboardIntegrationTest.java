@@ -3,7 +3,10 @@ package com.apps.dashboard;
 import com.apps.dashboard.api.model.Application;
 import com.apps.dashboard.api.model.ApplicationCreate;
 import com.apps.dashboard.api.model.ApplicationUpdate;
+import com.google.common.collect.Sets;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.junit.jupiter.api.Assertions;
@@ -37,6 +40,8 @@ public class DashboardIntegrationTest {
     final String updatedDns = "https://localhost:8081";
     final String updatedHealthCheckEndpoint = "/ping.html";
 
+    getAllApplicationValidator(Sets.newHashSet());
+
     String newAppId = createApplication(appName, dns, healthCheckEndpoint);
 
     validateApplication(appName, dns, healthCheckEndpoint, newAppId);
@@ -44,6 +49,23 @@ public class DashboardIntegrationTest {
     updateApplication(newAppId, updatedAppName, updatedDns, updatedHealthCheckEndpoint);
 
     validateApplication(updatedAppName, updatedDns, updatedHealthCheckEndpoint, newAppId);
+
+    getAllApplicationValidator(Sets.newHashSet(newAppId));
+  }
+
+  private void getAllApplicationValidator(final Set<String> appIds) {
+
+    ResponseEntity<Application[]> getAllAppsResp = this.restTemplate
+        .getForEntity("/application", Application[].class);
+
+    Assertions.assertNotNull(getAllAppsResp.getBody());
+
+    Application[] applications = getAllAppsResp.getBody();
+
+    Assertions.assertEquals(appIds.size(), applications.length);
+
+    Arrays.stream(applications)
+        .forEach(app -> Assertions.assertTrue(appIds.contains(app.getId())));
   }
 
   private void updateApplication(String newAppId, String updatedAppName, String updatedDns,
