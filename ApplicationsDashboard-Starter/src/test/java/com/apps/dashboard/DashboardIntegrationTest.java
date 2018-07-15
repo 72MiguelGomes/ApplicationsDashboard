@@ -30,7 +30,7 @@ public class DashboardIntegrationTest {
   private TestRestTemplate restTemplate;
 
   @Test
-  public void happyPath() {
+  public void applicationsCRUDHappyPath() {
 
     final String appName = "appName";
     final String dns = "https://localhost:8080";
