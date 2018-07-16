@@ -2,10 +2,17 @@ package com.apps.dashboard.controllers;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.apps.dashboard.api.model.ApplicationCreate;
 import com.apps.dashboard.api.model.ApplicationUpdate;
@@ -21,10 +28,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +38,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(ApplicationController.class)
@@ -65,28 +68,28 @@ public class ApplicationControllerTest {
         dns,
         healthCheck);
 
-    Mockito.when(applicationService.getAllApplications())
+    when(applicationService.getAllApplications())
         .thenReturn(applicationList);
 
-    MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/application")
+    MvcResult mvcResult = mockMvc.perform(get("/application")
         .contentType(MediaType.APPLICATION_JSON))
         .andExpect(request().asyncStarted())
         .andReturn();
 
-    this.mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
-        .andExpect(MockMvcResultMatchers.status().isOk());
+    this.mockMvc.perform(asyncDispatch(mvcResult))
+        .andExpect(status().isOk());
 
     String jsonResult = mvcResult.getResponse().getContentAsString();
 
     List<Application> result = new Gson().fromJson(jsonResult, new TypeToken<List<Application>>(){}.getType());
 
-    Assertions.assertEquals(applicationIds.size(), result.size());
+    assertEquals(applicationIds.size(), result.size());
 
     result.forEach(app -> {
-              Assertions.assertTrue(applicationIds.contains(app.getId()));
-              Assertions.assertEquals(name, app.getName());
-              Assertions.assertEquals(dns, app.getDns());
-              Assertions.assertEquals(healthCheck, app.getHealthEndpoint());
+              assertTrue(applicationIds.contains(app.getId()));
+              assertEquals(name, app.getName());
+              assertEquals(dns, app.getDns());
+              assertEquals(healthCheck, app.getHealthEndpoint());
             });
   }
 
@@ -139,15 +142,15 @@ public class ApplicationControllerTest {
     applicationCreate.setDns(dns);
     applicationCreate.setHealthEndpoint(healthCheck);
 
-    MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/application")
+    MvcResult mvcResult = mockMvc.perform(post("/application")
         .contentType(MediaType.APPLICATION_JSON)
         .content(new Gson().toJson(applicationCreate)))
         .andExpect(request().asyncStarted())
         .andReturn();
 
-    this.mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
-        .andExpect(MockMvcResultMatchers.status().isCreated())
-        .andExpect(MockMvcResultMatchers.header()
+    this.mockMvc.perform(asyncDispatch(mvcResult))
+        .andExpect(status().isCreated())
+        .andExpect(header()
             .string("Location", "http://localhost/application/" + appId));
   }
 
@@ -168,16 +171,16 @@ public class ApplicationControllerTest {
         .healthEndpoint(healthCheck)
         .build();
 
-    Mockito.when(applicationService.getApplicationById(eq(appId)))
+    when(applicationService.getApplicationById(eq(appId)))
         .thenReturn(application);
 
-    MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/application/" + appId)
+    MvcResult mvcResult = mockMvc.perform(get("/application/" + appId)
         .contentType(MediaType.APPLICATION_JSON))
         .andExpect(request().asyncStarted())
         .andReturn();
 
-    this.mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
-        .andExpect(MockMvcResultMatchers.status().isOk());
+    this.mockMvc.perform(asyncDispatch(mvcResult))
+        .andExpect(status().isOk());
 
     String jsonResult = mvcResult.getResponse().getContentAsString();
 
@@ -194,16 +197,16 @@ public class ApplicationControllerTest {
 
     final Long appId = 10L;
 
-    Mockito.when(this.applicationService.getApplicationById(Mockito.eq(appId)))
+    when(this.applicationService.getApplicationById(eq(appId)))
         .thenThrow(EntityNotFoundException.class);
 
-    MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/application/" + appId)
+    MvcResult mvcResult = mockMvc.perform(get("/application/" + appId)
         .contentType(MediaType.APPLICATION_JSON))
         .andExpect(request().asyncStarted())
         .andReturn();
 
-    this.mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
-        .andExpect(MockMvcResultMatchers.status().isNotFound());
+    this.mockMvc.perform(asyncDispatch(mvcResult))
+        .andExpect(status().isNotFound());
   }
 
   /**
@@ -238,15 +241,15 @@ public class ApplicationControllerTest {
     applicationUpdate.setDns(dns);
     applicationUpdate.setHealthEndpoint(healthCheck);
 
-    MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/application/" + appId)
+    MvcResult mvcResult = mockMvc.perform(put("/application/" + appId)
         .contentType(MediaType.APPLICATION_JSON)
         .content(new Gson().toJson(applicationUpdate)))
         .andExpect(request().asyncStarted())
         .andReturn();
 
-    this.mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
-        .andExpect(MockMvcResultMatchers.status().isNoContent())
-        .andExpect(MockMvcResultMatchers.header()
+    this.mockMvc.perform(asyncDispatch(mvcResult))
+        .andExpect(status().isNoContent())
+        .andExpect(header()
             .string("Location", "http://localhost/application/" + appId));
 
   }
@@ -268,14 +271,14 @@ public class ApplicationControllerTest {
     applicationUpdate.setDns(dns);
     applicationUpdate.setHealthEndpoint(healthCheck);
 
-    MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/application/" + appId)
+    MvcResult mvcResult = mockMvc.perform(put("/application/" + appId)
         .contentType(MediaType.APPLICATION_JSON)
         .content(new Gson().toJson(applicationUpdate)))
         .andExpect(request().asyncStarted())
         .andReturn();
 
-    this.mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
-        .andExpect(MockMvcResultMatchers.status().isNotFound());
+    this.mockMvc.perform(asyncDispatch(mvcResult))
+        .andExpect(status().isNotFound());
   }
 
   /**
@@ -294,16 +297,16 @@ public class ApplicationControllerTest {
         .version(version)
         .build();
 
-    Mockito.when(this.applicationStatusService.getApplicationStatus(eq(appId)))
+    when(this.applicationStatusService.getApplicationStatus(eq(appId)))
         .thenReturn(Optional.of(serviceInfo));
 
-    MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/application/" + appId + "/serviceInfo")
+    MvcResult mvcResult = mockMvc.perform(get("/application/" + appId + "/serviceInfo")
         .contentType(MediaType.APPLICATION_JSON))
         .andExpect(request().asyncStarted())
         .andReturn();
 
-    this.mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
-        .andExpect(MockMvcResultMatchers.status().isOk());
+    this.mockMvc.perform(asyncDispatch(mvcResult))
+        .andExpect(status().isOk());
 
     String jsonResult = mvcResult.getResponse().getContentAsString();
 
@@ -318,16 +321,16 @@ public class ApplicationControllerTest {
 
     final Long appId = 10L;
 
-    Mockito.when(this.applicationStatusService.getApplicationStatus(Mockito.eq(appId)))
+    when(this.applicationStatusService.getApplicationStatus(eq(appId)))
         .thenReturn(Optional.empty());
 
-    MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/application/" + appId + "/serviceInfo")
+    MvcResult mvcResult = mockMvc.perform(get("/application/" + appId + "/serviceInfo")
         .contentType(MediaType.APPLICATION_JSON))
         .andExpect(request().asyncStarted())
         .andReturn();
 
-    this.mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
-        .andExpect(MockMvcResultMatchers.status().isNotFound());
+    this.mockMvc.perform(asyncDispatch(mvcResult))
+        .andExpect(status().isNotFound());
   }
 
 }
