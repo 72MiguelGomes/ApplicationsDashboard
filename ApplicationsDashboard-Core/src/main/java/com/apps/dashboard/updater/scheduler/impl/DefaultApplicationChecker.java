@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DefaultApplicationCheker implements ApplicationChecker {
+public class DefaultApplicationChecker implements ApplicationChecker {
 
   private final ApplicationService applicationService;
 
@@ -19,7 +19,7 @@ public class DefaultApplicationCheker implements ApplicationChecker {
   private final ApplicationMonitor applicationMonitor;
 
   @Autowired
-  public DefaultApplicationCheker(ApplicationService applicationService,
+  public DefaultApplicationChecker(ApplicationService applicationService,
       ApplicationStatusService applicationStatusService,
       ApplicationMonitor applicationMonitor) {
     this.applicationService = applicationService;
