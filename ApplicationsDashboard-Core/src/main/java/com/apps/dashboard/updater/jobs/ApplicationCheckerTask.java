@@ -1,12 +1,16 @@
 package com.apps.dashboard.updater.jobs;
 
 import com.apps.dashboard.updater.scheduler.ApplicationChecker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ApplicationCheckerTask {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationCheckerTask.class);
 
   private ApplicationChecker applicationChecker;
 
@@ -19,6 +23,11 @@ public class ApplicationCheckerTask {
   //TODO: remove as much spring dependencies as possible from core
   @Scheduled(fixedDelay = 5000)
   public void updateApplications() {
-    this.applicationChecker.updateApplicationsInfo();
+    try {
+      LOGGER.debug("[Start] Updating applications info");
+      this.applicationChecker.updateApplicationsInfo();
+    } finally {
+      LOGGER.debug("[FINISHED] Updating applications info");
+    }
   }
 }
