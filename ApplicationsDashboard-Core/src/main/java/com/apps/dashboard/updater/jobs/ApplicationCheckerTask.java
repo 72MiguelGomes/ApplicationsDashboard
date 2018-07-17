@@ -10,9 +10,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationCheckerTask {
 
+  private static final long INTERVAL = 5000L;
+
   private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationCheckerTask.class);
 
-  private ApplicationChecker applicationChecker;
+  private final ApplicationChecker applicationChecker;
 
   @Autowired
   public ApplicationCheckerTask(
@@ -21,7 +23,7 @@ public class ApplicationCheckerTask {
   }
 
   //TODO: remove as much spring dependencies as possible from core
-  @Scheduled(fixedDelay = 5000)
+  @Scheduled(fixedDelay = INTERVAL)
   public void updateApplications() {
     try {
       LOGGER.debug("[Start] Updating applications info");
