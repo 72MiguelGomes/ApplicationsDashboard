@@ -115,6 +115,11 @@
         <artifactId>ApplicationsDashboard-Database</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.apps.dashboard</groupId>
+        <artifactId>ApplicationsDashboard-Web</artifactId>
+        <version>${project.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

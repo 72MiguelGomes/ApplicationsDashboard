@@ -11,5 +11,17 @@
 
   <artifactId>ApplicationsDashboard-Web</artifactId>
 
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
+
+    <!-- Internal Dependencies -->
+    <dependency>
+      <groupId>com.apps.dashboard</groupId>
+      <artifactId>ApplicationsDashboard-Core</artifactId>
+    </dependency>
+  </dependencies>
 
 </project>

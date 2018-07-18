@@ -1,0 +1,11 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Applications Dashboard</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1>Applications Dashboard</h1>
+<p th:each="app : ${apps}" th:text="${app.name}" />
+</body>
+</html>
