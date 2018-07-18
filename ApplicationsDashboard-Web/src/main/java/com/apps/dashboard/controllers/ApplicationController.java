@@ -2,9 +2,7 @@ package com.apps.dashboard.controllers;
 
 import com.apps.dashboard.model.Application;
 import com.apps.dashboard.services.ApplicationService;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,22 +23,7 @@ public class ApplicationController {
 
     Collection<Application> applications = this.applicationService.getAllApplications();
 
-    Application.builder()
-        .name("1")
-        .build();
-
-    //model.addAllAttributes(applications);
-    List<Application> apps = Arrays.asList(
-        Application.builder()
-            .name("app1")
-            .build(),
-        Application.builder()
-            .name("app2")
-            .build()
-    );
-
-
-    model.addAttribute("apps", apps);
+    model.addAttribute("apps", applications);
 
     return "applications";
   }
