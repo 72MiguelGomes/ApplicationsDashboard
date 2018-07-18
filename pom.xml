@@ -21,6 +21,7 @@
     <module>ApplicationsDashboard-Api</module>
     <module>ApplicationsDashboard-Database</module>
     <module>ApplicationsDashboard-Starter</module>
+    <module>ApplicationsDashboard-Web</module>
   </modules>
 
   <properties>
