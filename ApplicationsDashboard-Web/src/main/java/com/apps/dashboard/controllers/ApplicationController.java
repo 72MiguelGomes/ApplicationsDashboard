@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class ApplicationController {
@@ -27,7 +28,7 @@ public class ApplicationController {
     this.applicationStatusService = applicationStatusService;
   }
 
-  @GetMapping("/applications")
+  @GetMapping("/application")
   public String getApplications(Model model) {
 
     Collection<Application> applications = this.applicationService.getAllApplications();
@@ -43,9 +44,24 @@ public class ApplicationController {
     return "applications";
   }
 
+  @GetMapping("/application/{appId}")
+  public String getApplication(@PathVariable("appId") Long id, Model model) {
+
+    final Application application = this.applicationService.getApplicationById(id);
+
+    final ServiceInfo serviceInfo = this.applicationStatusService.getApplicationStatus(id)
+        .orElseGet(() -> this.createEmptyServiceInfo(application));
+
+    model.addAttribute("app", application);
+    model.addAttribute("serviceInfo", serviceInfo);
+
+    return "application";
+  }
+
   private ServiceInfo createEmptyServiceInfo(Application app) {
     return ServiceInfo.builder()
         .applicationId(app.getId())
+        .healthy(app.getId() % 2 == 0) //TODO: This is an hack to test app status
         .build();
   }
 
