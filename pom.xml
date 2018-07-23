@@ -22,6 +22,7 @@
     <module>ApplicationsDashboard-Database</module>
     <module>ApplicationsDashboard-Starter</module>
     <module>ApplicationsDashboard-Web</module>
+    <module>ApplicationsDashboard-Starter-Web</module>
   </modules>
 
   <properties>

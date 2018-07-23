@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>ApplicationsDashboard</artifactId>
+    <groupId>com.apps.dashboard</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>ApplicationsDashboard-Starter-Web</artifactId>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.apps.dashboard</groupId>
+      <artifactId>ApplicationsDashboard-Database</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.apps.dashboard</groupId>
+      <artifactId>ApplicationsDashboard-Core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.apps.dashboard</groupId>
+      <artifactId>ApplicationsDashboard-Web</artifactId>
+    </dependency>
+  </dependencies>
+
+</project>
