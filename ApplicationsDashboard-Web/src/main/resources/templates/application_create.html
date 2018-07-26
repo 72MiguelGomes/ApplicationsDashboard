@@ -68,13 +68,25 @@
 
     <div class="col-sm-9">
       <div class="row">
-        <div class="col-sm-3" th:each="app : ${apps}">
-          <div class="well" th:classappend="${app.healthy} ? online : offline">
-            <h4><a th:text="${app.name}" th:href="@{'application/' + ${app.id}}"></a></h4>
-            <p th:text="${app.name}"></p>
-          </div>
+        <div class="col-sm-9">
+          <h1>Create Application</h1>
         </div>
       </div>
+      <form action="#" th:action="@{/application/create}" th:object="${application}" method="post">
+        <div class="row">
+          <div class="col-sm-3">
+            <p>Name:</p>
+          </div>
+          <div class="col-sm-3">
+            <input type="text" th:field="*{name}" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3">
+            <input type="submit" value="Submit" />
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </div>

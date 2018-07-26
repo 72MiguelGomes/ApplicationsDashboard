@@ -1,18 +1,18 @@
 package com.apps.dashboard.controllers;
 
+import com.apps.dashboard.controllers.model.ApplicationModel;
 import com.apps.dashboard.model.Application;
-import com.apps.dashboard.model.ServiceInfo;
 import com.apps.dashboard.services.ApplicationService;
 import com.apps.dashboard.services.ApplicationStatusService;
 import java.util.Collection;
-import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class ApplicationController {
@@ -31,15 +31,30 @@ public class ApplicationController {
   @GetMapping("/application")
   public String getApplications(Model model) {
 
-    Collection<Application> applications = this.applicationService.getAllApplications();
-
-    Map<Long, ServiceInfo> serviceInfoMap = applications.stream()
-        .map(app -> this.applicationStatusService.getApplicationStatus(app.getId())
-            .orElseGet(() -> this.createEmptyServiceInfo(app)))
-        .collect(Collectors.toMap(ServiceInfo::getApplicationId, Function.identity()));
+    Collection<ApplicationModel> applications = this.applicationService.getAllApplications()
+        .stream()
+        .map(this::convertApplication)
+        .collect(Collectors.toList());
 
     model.addAttribute("apps", applications);
-    model.addAttribute("serviceInfoMap", serviceInfoMap);
+
+    return "applications";
+  }
+
+  @GetMapping("/application/create")
+  public String getCreateApplication(Model model) {
+
+    model.addAttribute("application", new ApplicationModel());
+
+    return "application_create";
+  }
+
+  @PostMapping("/application/create")
+  public String createApplication(@ModelAttribute ApplicationModel applicationModel, Model model) {
+
+    Application application = this.convertApplication(applicationModel);
+
+    this.applicationService.createApplication(application);
 
     return "applications";
   }
@@ -47,22 +62,40 @@ public class ApplicationController {
   @GetMapping("/application/{appId}")
   public String getApplication(@PathVariable("appId") Long id, Model model) {
 
-    final Application application = this.applicationService.getApplicationById(id);
-
-    final ServiceInfo serviceInfo = this.applicationStatusService.getApplicationStatus(id)
-        .orElseGet(() -> this.createEmptyServiceInfo(application));
+    final ApplicationModel application = convertApplication(
+        this.applicationService.getApplicationById(id));
 
     model.addAttribute("app", application);
-    model.addAttribute("serviceInfo", serviceInfo);
 
     return "application";
   }
 
-  private ServiceInfo createEmptyServiceInfo(Application app) {
-    return ServiceInfo.builder()
-        .applicationId(app.getId())
-        .healthy(app.getId() % 2 == 0) //TODO: This is an hack to test app status
+  private ApplicationModel convertApplication(Application application) {
+
+    ApplicationModel applicationModel = new ApplicationModel();
+    applicationModel.setName(application.getName());
+    applicationModel.setDns(application.getDns());
+    applicationModel.setId(application.getId());
+
+    this.applicationStatusService.getApplicationStatus(application.getId())
+        .ifPresent(appStatus -> {
+              applicationModel.setHealthy(appStatus.isHealthy());
+              applicationModel.setVersion(appStatus.getVersion());
+            }
+        );
+
+    return applicationModel;
+  }
+
+  private Application convertApplication(ApplicationModel applicationModel) {
+
+    return Application.builder()
+        .id(applicationModel.getId())
+        .name(applicationModel.getName())
+        .dns(applicationModel.getDns())
+        .healthEndpoint(applicationModel.getHealthEndpoint())
         .build();
+
   }
 
 }
