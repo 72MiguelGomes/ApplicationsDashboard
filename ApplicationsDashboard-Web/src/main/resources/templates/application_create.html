@@ -77,9 +77,13 @@
         <div class="row">
           <div class="col-sm-3">
             <p>Name:</p>
+            <p>DNS:</p>
+            <p>Health Endpoint:</p>
           </div>
           <div class="col-sm-3">
             <input type="text" th:field="*{name}" />
+            <input type="text" th:field="*{dns}" />
+            <input type="text" th:field="*{healthEndpoint}" />
           </div>
         </div>
         <div class="row">
