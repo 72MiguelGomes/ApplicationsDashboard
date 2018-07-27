@@ -87,7 +87,7 @@ public class ApplicationController {
 
     Application application = this.convertApplication(applicationModel);
 
-    this.applicationService.updateApplication(applicationModel.getId(), application);
+    this.applicationService.updateApplication(id, application);
 
     return new ModelAndView("redirect:/application");
   }
