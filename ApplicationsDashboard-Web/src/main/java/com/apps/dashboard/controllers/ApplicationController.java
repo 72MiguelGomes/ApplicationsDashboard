@@ -71,6 +71,27 @@ public class ApplicationController {
     return "application";
   }
 
+  @GetMapping("/application/{appId}/update")
+  public String getApplicationToUpdate(@PathVariable("appId") Long id, Model model) {
+
+    final ApplicationModel application = convertApplication(
+        this.applicationService.getApplicationById(id));
+
+    model.addAttribute("app", application);
+
+    return "application_update";
+  }
+
+  @PostMapping("/application/{appId}/update")
+  public ModelAndView updateApplication(@PathVariable("appId") Long id, @ModelAttribute ApplicationModel applicationModel, Model model) {
+
+    Application application = this.convertApplication(applicationModel);
+
+    this.applicationService.updateApplication(applicationModel.getId(), application);
+
+    return new ModelAndView("redirect:/application");
+  }
+
   private ApplicationModel convertApplication(Application application) {
 
     ApplicationModel applicationModel = new ApplicationModel();
