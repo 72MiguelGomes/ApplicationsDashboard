@@ -1,9 +1,9 @@
 package com.apps.dashboard.controllers;
 
 import com.apps.dashboard.controllers.model.ApplicationModel;
+import com.apps.dashboard.controllers.model.mapper.ModelMapper;
 import com.apps.dashboard.model.Application;
 import com.apps.dashboard.services.ApplicationService;
-import com.apps.dashboard.services.ApplicationStatusService;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +20,13 @@ public class ApplicationController {
 
   private final ApplicationService applicationService;
 
-  private final ApplicationStatusService applicationStatusService;
+  private final ModelMapper modelMapper;
 
   @Autowired
   public ApplicationController(ApplicationService applicationService,
-      ApplicationStatusService applicationStatusService) {
+      ModelMapper modelMapper) {
     this.applicationService = applicationService;
-    this.applicationStatusService = applicationStatusService;
+    this.modelMapper = modelMapper;
   }
 
   @GetMapping("/application")
@@ -34,7 +34,7 @@ public class ApplicationController {
 
     Collection<ApplicationModel> applications = this.applicationService.getAllApplications()
         .stream()
-        .map(this::convertApplication)
+        .map(modelMapper::convertApplication)
         .collect(Collectors.toList());
 
     model.addAttribute("apps", applications);
@@ -53,7 +53,7 @@ public class ApplicationController {
   @PostMapping("/application/create")
   public ModelAndView createApplication(@ModelAttribute ApplicationModel applicationModel, Model model) {
 
-    Application application = this.convertApplication(applicationModel);
+    Application application = modelMapper.convertApplication(applicationModel);
 
     this.applicationService.createApplication(application);
 
@@ -63,7 +63,7 @@ public class ApplicationController {
   @GetMapping("/application/{appId}")
   public String getApplication(@PathVariable("appId") Long id, Model model) {
 
-    final ApplicationModel application = convertApplication(
+    final ApplicationModel application = modelMapper.convertApplication(
         this.applicationService.getApplicationById(id));
 
     model.addAttribute("app", application);
@@ -74,7 +74,7 @@ public class ApplicationController {
   @GetMapping("/application/{appId}/update")
   public String getApplicationToUpdate(@PathVariable("appId") Long id, Model model) {
 
-    final ApplicationModel application = convertApplication(
+    final ApplicationModel application = modelMapper.convertApplication(
         this.applicationService.getApplicationById(id));
 
     model.addAttribute("app", application);
@@ -85,40 +85,11 @@ public class ApplicationController {
   @PostMapping("/application/{appId}/update")
   public ModelAndView updateApplication(@PathVariable("appId") Long id, @ModelAttribute ApplicationModel applicationModel, Model model) {
 
-    Application application = this.convertApplication(applicationModel);
+    Application application = modelMapper.convertApplication(applicationModel);
 
     this.applicationService.updateApplication(id, application);
 
     return new ModelAndView("redirect:/application");
-  }
-
-  private ApplicationModel convertApplication(Application application) {
-
-    ApplicationModel applicationModel = new ApplicationModel();
-    applicationModel.setName(application.getName());
-    applicationModel.setDns(application.getDns());
-    applicationModel.setId(application.getId());
-    applicationModel.setHealthEndpoint(application.getHealthEndpoint());
-
-    this.applicationStatusService.getApplicationStatus(application.getId())
-        .ifPresent(appStatus -> {
-              applicationModel.setHealthy(appStatus.isHealthy());
-              applicationModel.setVersion(appStatus.getVersion());
-            }
-        );
-
-    return applicationModel;
-  }
-
-  private Application convertApplication(ApplicationModel applicationModel) {
-
-    return Application.builder()
-        .id(applicationModel.getId())
-        .name(applicationModel.getName())
-        .dns(applicationModel.getDns())
-        .healthEndpoint(applicationModel.getHealthEndpoint())
-        .build();
-
   }
 
 }
