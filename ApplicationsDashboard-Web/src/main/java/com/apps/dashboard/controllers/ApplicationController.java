@@ -98,6 +98,7 @@ public class ApplicationController {
     applicationModel.setName(application.getName());
     applicationModel.setDns(application.getDns());
     applicationModel.setId(application.getId());
+    applicationModel.setHealthEndpoint(application.getHealthEndpoint());
 
     this.applicationStatusService.getApplicationStatus(application.getId())
         .ifPresent(appStatus -> {
