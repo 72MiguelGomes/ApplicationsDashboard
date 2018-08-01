@@ -21,4 +21,10 @@ public class ServiceInfo {
         .build();
   }
 
+  public static ServiceInfo empty(Long applicationId) {
+    return ServiceInfo.builder()
+        .applicationId(applicationId)
+        .build();
+  }
+
 }
