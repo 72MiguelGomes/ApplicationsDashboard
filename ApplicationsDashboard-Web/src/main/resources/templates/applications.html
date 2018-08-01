@@ -1,73 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <title>Applications Dashboard</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <style>
-    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
-    .row.content {height: 550px}
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
 
-    /* Set gray background color and 100% height */
-    .sidenav {
-      background-color: #f1f1f1;
-      height: 100%;
-    }
-
-    /* TODO: This is an hack, please remove the `important` property */
-    .online {
-      color: #3c763d !important;
-      background-color: #dff0d8 !important;
-      border-color: #d6e9c6 !important;
-    }
-
-    .offline {
-      color: #a94442 !important;
-      background-color: #f2dede !important;
-      border-color: #ebccd1 !important;
-    }
-
-    /* On small screens, set height to 'auto' for the grid */
-    @media screen and (max-width: 767px) {
-      .row.content {height: auto;}
-    }
-  </style>
-</head>
-<body>
-
-<nav class="navbar navbar-inverse visible-xs">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" th:href="@{~/application}">Applications Dashboard</a>
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav">
-        <li class="active"><a th:href="@{~/application}">Dashboard</a></li>
-        <li><a th:href="@{~/application/create}">Create Application</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
-
-<div class="container-fluid">
-  <div class="row content">
-    <div class="col-sm-3 sidenav hidden-xs">
-      <h2>Logo</h2>
-      <ul class="nav nav-pills nav-stacked">
-        <li class="active"><a th:href="@{~/application}">Dashboard</a></li>
-        <li><a th:href="@{~/application/create}">Create Application</a></li>
-      </ul><br>
-    </div>
-    <br>
-
+  <div layout:fragment="page_content" id="page_content">
     <div class="col-sm-9">
       <div class="row">
         <div class="col-sm-3" th:each="app : ${apps}">
@@ -79,7 +16,5 @@
       </div>
     </div>
   </div>
-</div>
 
-</body>
 </html>
