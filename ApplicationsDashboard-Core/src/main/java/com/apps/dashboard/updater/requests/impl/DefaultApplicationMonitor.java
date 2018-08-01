@@ -49,7 +49,9 @@ public class DefaultApplicationMonitor implements ApplicationMonitor {
 
       healthy = response.getStatusInfo().getFamily() == Family.SUCCESSFUL;
     } catch (ProcessingException e) {
-      LOGGER.warn("Possible Timeout", e.getCause());
+      LOGGER.warn(e.getMessage());
+    } catch (Exception e) {
+      LOGGER.error(e.getMessage());
     }
 
     LOGGER.debug("Healthy: {}", healthy);
