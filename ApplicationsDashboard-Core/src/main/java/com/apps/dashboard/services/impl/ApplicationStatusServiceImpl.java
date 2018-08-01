@@ -1,6 +1,5 @@
 package com.apps.dashboard.services.impl;
 
-import com.apps.dashboard.exceptions.EntityNotFoundException;
 import com.apps.dashboard.model.ServiceInfo;
 import com.apps.dashboard.repositories.ApplicationStatusRepo;
 import com.apps.dashboard.services.ApplicationStatusService;
@@ -26,7 +25,7 @@ public class ApplicationStatusServiceImpl implements ApplicationStatusService {
   public void updateApplicationStatus(@Nonnull Long applicationId, @Nonnull ServiceInfo serviceInfo) {
 
     ServiceInfo newServiceInfo = getApplicationStatus(applicationId)
-        .orElseThrow(EntityNotFoundException::new)
+        .orElse(ServiceInfo.empty(applicationId))
         .update(serviceInfo);
 
     applicationStatusRepo.updateApplicationStatus(newServiceInfo);

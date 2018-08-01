@@ -8,7 +8,6 @@ import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.apps.dashboard.exceptions.EntityNotFoundException;
 import com.apps.dashboard.model.ServiceInfo;
 import com.apps.dashboard.repositories.ApplicationStatusRepo;
 import java.util.Optional;
@@ -82,18 +81,28 @@ public class ApplicationStatusServiceImplTest {
   }
 
   @Test
-  public void updateApplicationStatusWithInvalidAppId() {
+  public void updateApplicationStatusWithNewAppId() {
     final Long applicationID = 100000L;
+    final String version = "v1";
+    final boolean healthy = false;
 
     final ServiceInfo serviceInfo = ServiceInfo.builder()
         .applicationId(applicationID)
-        .version("v1")
-        .healthy(false)
+        .version(version)
+        .healthy(healthy)
         .build();
 
-    assertThrows(EntityNotFoundException.class, () -> {
-      applicationStatusService.updateApplicationStatus(applicationID, serviceInfo);
-    });
+    applicationStatusService.updateApplicationStatus(applicationID, serviceInfo);
+
+    ArgumentCaptor<ServiceInfo> serviceInfoArgumentCaptor = ArgumentCaptor.forClass(ServiceInfo.class);
+
+    verify(this.applicationStatusRepo).updateApplicationStatus(serviceInfoArgumentCaptor.capture());
+
+    ServiceInfo updatedServiceInfo = serviceInfoArgumentCaptor.getValue();
+
+    assertEquals(applicationID, updatedServiceInfo.getApplicationId());
+    assertEquals(version, updatedServiceInfo.getVersion());
+    assertEquals(healthy, updatedServiceInfo.isHealthy());
   }
 
   /**
