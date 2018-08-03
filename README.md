@@ -29,7 +29,12 @@ This module is responsible for glue all modules in order to run the application.
 
 ### ApplicationDashboard-Web
 
-Responsible for create server side rendering. Will serve an visual interface for the application. 
+Responsible for create server side rendering. Will serve an visual interface for the application.
+
+### ApplicationDashboard-Starter-Web
+
+This module is responsible for glue all modules in order to run the application with the web view interface.
+It is very similar to `ApplicationDashboard-Starter` although it replaces the API for the web view.
 
 ## Requirements
 
