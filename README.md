@@ -27,6 +27,10 @@ Module responsible for expose the functionalities throw a REST interface. Must o
 
 This module is responsible for glue all modules in order to run the application.
 
+### ApplicationDashboard-Web
+
+Responsible for create server side rendering. Will serve an visual interface for the application. 
+
 ## Requirements
 
 - Maven
