@@ -26,4 +26,16 @@ class ApplicationControllerTest {
 
     assertThat(page.getElementsByName("app").size()).isEqualTo(1);
   }
+
+  @Test
+  public void navigateToRegistNewApplication() throws Exception {
+
+    HtmlPage page = this.webClient.getPage("/application");
+
+    assertThat(page.getElementsByName("app").size()).isEqualTo(1);
+
+    HtmlPage creationPage = page.getElementByName("create_app").click();
+
+    assertThat(creationPage.getUrl().getPath()).isEqualToIgnoringCase("/application/create");
+  }
 }
