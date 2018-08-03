@@ -21,6 +21,17 @@
       <artifactId>thymeleaf-layout-dialect</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>net.sourceforge.htmlunit</groupId>
+      <artifactId>htmlunit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.sourceforge.htmlunit</groupId>
+      <artifactId>htmlunit</artifactId>
+      <scope>test</scope>
+    </dependency>
+
     <!-- Internal Dependencies -->
     <dependency>
       <groupId>com.apps.dashboard</groupId>
