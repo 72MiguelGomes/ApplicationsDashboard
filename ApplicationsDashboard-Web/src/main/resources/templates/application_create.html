@@ -11,7 +11,7 @@
         <h1>Create Application</h1>
       </div>
     </div>
-    <form action="#" th:action="@{/application/create}" th:object="${application}" method="post">
+    <form name="create_app_form" action="#" th:action="@{/application/create}" th:object="${application}" method="post">
       <div class="row">
         <div class="col-sm-3">
           <p>Name:</p>
@@ -19,14 +19,14 @@
           <p>Health Endpoint:</p>
         </div>
         <div class="col-sm-3">
-          <input type="text" th:field="*{name}" />
-          <input type="text" th:field="*{dns}" />
-          <input type="text" th:field="*{healthEndpoint}" />
+          <input name="name" type="text" th:field="*{name}" />
+          <input name="dns" type="text" th:field="*{dns}" />
+          <input name="healthEndpoint" type="text" th:field="*{healthEndpoint}" />
         </div>
       </div>
       <div class="row">
         <div class="col-sm-3">
-          <input type="submit" value="Submit" />
+          <input name="submit" type="submit" value="Submit" />
         </div>
       </div>
     </form>
