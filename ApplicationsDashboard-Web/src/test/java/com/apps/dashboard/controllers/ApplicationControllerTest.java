@@ -78,4 +78,14 @@ class ApplicationControllerTest {
     Assertions.assertEquals(healthEndpoint, applicationCreated.getHealthEndpoint());
     Assertions.assertNull(applicationCreated.getId());
   }
+
+  @Test
+  public void navigateToUpdateApplication() throws Exception {
+
+    HtmlPage appPage = this.webClient.getPage("/application/123");
+
+    HtmlPage updateAppPage = appPage.getElementByName("update_app_btn").click();
+
+    assertThat(updateAppPage.getUrl().getPath()).isEqualToIgnoringCase("/application/123/update");
+  }
 }

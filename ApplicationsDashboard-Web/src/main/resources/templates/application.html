@@ -14,7 +14,7 @@
               <h4 th:text="'ID: ' + ${app.id}" ></h4>
             </div>
             <div class="col-sm-1 col-sm-offset-3">
-              <a th:href="@{'~/application/' + ${app.id} + '/update'}"><span class="glyphicon glyphicon-edit"></span></a>
+              <a name="update_app_btn" th:href="@{'~/application/' + ${app.id} + '/update'}"><span class="glyphicon glyphicon-edit"></span></a>
             </div>
           </div>
           <div class="row">
