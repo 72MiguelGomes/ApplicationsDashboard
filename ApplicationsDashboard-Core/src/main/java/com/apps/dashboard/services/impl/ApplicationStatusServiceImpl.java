@@ -4,6 +4,8 @@ import com.apps.dashboard.model.ServiceInfo;
 import com.apps.dashboard.repositories.ApplicationStatusRepo;
 import com.apps.dashboard.services.ApplicationStatusService;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -36,5 +38,19 @@ public class ApplicationStatusServiceImpl implements ApplicationStatusService {
     Preconditions.checkArgument(Objects.nonNull(applicationId), "ApplicationId must non null");
 
     return Optional.ofNullable(applicationStatusRepo.getApplicationStatus(applicationId));
+  }
+
+  @Override
+  public Map<String, String> getEndpointInfo(@Nonnull Long applicationId) {
+
+    Optional<ServiceInfo> serviceInfoOpt = getApplicationStatus(applicationId);
+
+    final Map<String, String> endpointInfo = Maps.newHashMap();
+
+    serviceInfoOpt.ifPresent(serviceInfo -> {
+
+    });
+
+    return endpointInfo;
   }
 }

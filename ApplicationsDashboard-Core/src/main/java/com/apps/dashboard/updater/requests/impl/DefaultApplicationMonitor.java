@@ -1,15 +1,11 @@
 package com.apps.dashboard.updater.requests.impl;
 
-import static org.glassfish.jersey.client.ClientProperties.CONNECT_TIMEOUT;
-import static org.glassfish.jersey.client.ClientProperties.READ_TIMEOUT;
-
+import com.apps.dashboard.external.requests.RequestHelper;
 import com.apps.dashboard.model.Application;
 import com.apps.dashboard.model.ServiceInfo;
 import com.apps.dashboard.updater.requests.ApplicationMonitor;
 import javax.annotation.Nonnull;
 import javax.ws.rs.ProcessingException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status.Family;
 import org.slf4j.Logger;
@@ -22,11 +18,11 @@ public class DefaultApplicationMonitor implements ApplicationMonitor {
 
   private static Logger LOGGER = LoggerFactory.getLogger(DefaultApplicationMonitor.class);
 
-  private Client client;
+  private RequestHelper requestHelper;
 
   @Autowired
-  public DefaultApplicationMonitor(Client client) {
-    this.client = client;
+  public DefaultApplicationMonitor(RequestHelper requestHelper) {
+    this.requestHelper = requestHelper;
   }
 
   @Nonnull
@@ -37,15 +33,10 @@ public class DefaultApplicationMonitor implements ApplicationMonitor {
         application.getId(),
         application.getHealthCheckUrl());
 
-    Invocation.Builder builder = client.target(application.getHealthCheckUrl())
-        .request()
-        .property(CONNECT_TIMEOUT, 500)
-        .property(READ_TIMEOUT, 500);
-
     boolean healthy = false;
 
     try {
-      Response response = builder.get();
+      Response response = requestHelper.performGetRequest(application.getHealthCheckUrl());
 
       healthy = response.getStatusInfo().getFamily() == Family.SUCCESSFUL;
     } catch (ProcessingException e) {
