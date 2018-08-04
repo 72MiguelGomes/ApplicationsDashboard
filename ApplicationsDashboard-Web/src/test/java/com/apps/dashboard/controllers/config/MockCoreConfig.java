@@ -1,13 +1,14 @@
 package com.apps.dashboard.controllers.config;
 
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.apps.dashboard.model.Application;
 import com.apps.dashboard.services.ApplicationService;
 import com.apps.dashboard.services.ApplicationStatusService;
-import java.util.Arrays;
+import java.util.Collections;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
-import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -19,14 +20,20 @@ public class MockCoreConfig {
   @Bean
   public ApplicationService applicationService() {
 
-    ApplicationService applicationService = Mockito.mock(ApplicationService.class);
+    final Long appId = 123L;
 
+    Application app = Application.builder()
+        .id(appId)
+        .name("Test")
+        .build();
+
+    ApplicationService applicationService = mock(ApplicationService.class);
 
     when(applicationService.getAllApplications())
-        .thenReturn(Arrays.asList(Application.builder()
-            .id(123L)
-            .name("Test")
-            .build()));
+        .thenReturn(Collections.singletonList(app));
+
+    when(applicationService.getApplicationById(eq(appId)))
+        .thenReturn(app);
 
     return applicationService;
   }
@@ -38,7 +45,7 @@ public class MockCoreConfig {
 
   @Bean
   public ApplicationStatusService applicationStatusService() {
-    return Mockito.mock(ApplicationStatusService.class);
+    return mock(ApplicationStatusService.class);
   }
 
 }

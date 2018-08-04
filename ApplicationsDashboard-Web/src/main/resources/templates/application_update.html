@@ -11,7 +11,7 @@
       <h1>Update Application</h1>
     </div>
   </div>
-  <form action="#" th:action="@{'~/application/' + ${app.id} + '/update'}" th:object="${app}" method="post">
+  <form name="update_app_form" action="#" th:action="@{'~/application/' + ${app.id} + '/update'}" th:object="${app}" method="post">
     <div class="row">
       <div class="col-sm-3">
         <p>Name:</p>
@@ -19,14 +19,14 @@
         <p>Health Endpoint:</p>
       </div>
       <div class="col-sm-3">
-        <input type="text" th:field="*{name}" />
-        <input type="text" th:field="*{dns}" />
-        <input type="text" th:field="*{healthEndpoint}" />
+        <input name="name" type="text" th:field="*{name}" />
+        <input name="dns" type="text" th:field="*{dns}" />
+        <input name="healthEndpoint" type="text" th:field="*{healthEndpoint}" />
       </div>
     </div>
     <div class="row">
       <div class="col-sm-3">
-        <input type="submit" value="Submit" />
+        <input name="submit_btn" type="submit" value="Submit" />
       </div>
     </div>
   </form>

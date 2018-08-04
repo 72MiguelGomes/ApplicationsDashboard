@@ -89,7 +89,7 @@ public class ApplicationController {
 
     this.applicationService.updateApplication(id, application);
 
-    return new ModelAndView("redirect:/application");
+    return new ModelAndView("redirect:/application/" + id);
   }
 
 }

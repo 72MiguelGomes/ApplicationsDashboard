@@ -88,4 +88,35 @@ class ApplicationControllerTest {
 
     assertThat(updateAppPage.getUrl().getPath()).isEqualToIgnoringCase("/application/123/update");
   }
+
+  @Test
+  public void updateApplication() throws Exception {
+
+    final Long appId = 123L;
+    final String appName = "appName2";
+    final String dns = "dns2";
+    final String healthEndpoint = "healthEndpoint2";
+
+    HtmlPage page = this.webClient.getPage("/application/" + appId + "/update");
+
+    HtmlForm updateAppForm = page.getFormByName("update_app_form");
+
+    updateAppForm.getInputByName("name").setValueAttribute(appName);
+    updateAppForm.getInputByName("dns").setValueAttribute(dns);
+    updateAppForm.getInputByName("healthEndpoint").setValueAttribute(healthEndpoint);
+
+    HtmlPage applicationPage = updateAppForm.getInputByName("submit_btn").click();
+
+    assertThat(applicationPage.getUrl().getPath()).isEqualToIgnoringCase("/application/" + appId);
+
+    ArgumentCaptor<Application> applicationArgumentCaptor = ArgumentCaptor.forClass(Application.class);
+
+    Mockito.verify(applicationService, Mockito.times(1)).updateApplication(Mockito.eq(appId), applicationArgumentCaptor.capture());
+
+    final Application applicationUpdated = applicationArgumentCaptor.getValue();
+
+    Assertions.assertEquals(appName, applicationUpdated.getName());
+    Assertions.assertEquals(dns, applicationUpdated.getDns());
+    Assertions.assertEquals(healthEndpoint, applicationUpdated.getHealthEndpoint());
+  }
 }
