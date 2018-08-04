@@ -1,5 +1,6 @@
 package com.apps.dashboard.services;
 
+import com.apps.dashboard.model.Application;
 import com.apps.dashboard.model.ServiceInfo;
 import java.util.Map;
 import java.util.Optional;
@@ -12,6 +13,6 @@ public interface ApplicationStatusService {
   Optional<ServiceInfo> getApplicationStatus(@Nonnull Long applicationId);
 
   @Nonnull
-  Map<String, String> getEndpointInfo(Long applicationId);
+  Map<String, String> getEndpointsInfo(@Nonnull Application application);
 
 }
