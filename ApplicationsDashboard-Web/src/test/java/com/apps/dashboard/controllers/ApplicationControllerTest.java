@@ -1,6 +1,10 @@
 package com.apps.dashboard.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 
 import com.apps.dashboard.controllers.config.MockCoreConfig;
 import com.apps.dashboard.model.Application;
@@ -8,7 +12,6 @@ import com.apps.dashboard.services.ApplicationService;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -67,16 +70,18 @@ class ApplicationControllerTest {
 
     assertThat(applicationsPage.getUrl().getPath()).isEqualToIgnoringCase("/application");
 
-    ArgumentCaptor<Application> applicationArgumentCaptor = ArgumentCaptor.forClass(Application.class);
+    ArgumentCaptor<Application> applicationArgumentCaptor = ArgumentCaptor
+        .forClass(Application.class);
 
-    Mockito.verify(applicationService, Mockito.times(1)).createApplication(applicationArgumentCaptor.capture());
+    verify(applicationService, Mockito.times(1))
+        .createApplication(applicationArgumentCaptor.capture());
 
     final Application applicationCreated = applicationArgumentCaptor.getValue();
 
-    Assertions.assertEquals(appName, applicationCreated.getName());
-    Assertions.assertEquals(dns, applicationCreated.getDns());
-    Assertions.assertEquals(healthEndpoint, applicationCreated.getHealthEndpoint());
-    Assertions.assertNull(applicationCreated.getId());
+    assertEquals(appName, applicationCreated.getName());
+    assertEquals(dns, applicationCreated.getDns());
+    assertEquals(healthEndpoint, applicationCreated.getHealthEndpoint());
+    assertNull(applicationCreated.getId());
   }
 
   @Test
@@ -109,14 +114,16 @@ class ApplicationControllerTest {
 
     assertThat(applicationPage.getUrl().getPath()).isEqualToIgnoringCase("/application/" + appId);
 
-    ArgumentCaptor<Application> applicationArgumentCaptor = ArgumentCaptor.forClass(Application.class);
+    ArgumentCaptor<Application> applicationArgumentCaptor = ArgumentCaptor
+        .forClass(Application.class);
 
-    Mockito.verify(applicationService, Mockito.times(1)).updateApplication(Mockito.eq(appId), applicationArgumentCaptor.capture());
+    verify(applicationService, Mockito.times(1))
+        .updateApplication(eq(appId), applicationArgumentCaptor.capture());
 
     final Application applicationUpdated = applicationArgumentCaptor.getValue();
 
-    Assertions.assertEquals(appName, applicationUpdated.getName());
-    Assertions.assertEquals(dns, applicationUpdated.getDns());
-    Assertions.assertEquals(healthEndpoint, applicationUpdated.getHealthEndpoint());
+    assertEquals(appName, applicationUpdated.getName());
+    assertEquals(dns, applicationUpdated.getDns());
+    assertEquals(healthEndpoint, applicationUpdated.getHealthEndpoint());
   }
 }
