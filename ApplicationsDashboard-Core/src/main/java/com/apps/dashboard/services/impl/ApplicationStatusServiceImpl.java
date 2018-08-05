@@ -2,13 +2,14 @@ package com.apps.dashboard.services.impl;
 
 import com.apps.dashboard.external.requests.RequestHelper;
 import com.apps.dashboard.model.Application;
+import com.apps.dashboard.model.EndpointInfo;
 import com.apps.dashboard.model.ServiceInfo;
 import com.apps.dashboard.repositories.ApplicationStatusRepo;
 import com.apps.dashboard.services.ApplicationStatusService;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
 import java.text.MessageFormat;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -50,11 +51,12 @@ public class ApplicationStatusServiceImpl implements ApplicationStatusService {
   }
 
   @Override
-  public Map<String, String> getEndpointsInfo(@Nonnull Application application) {
+  @Nonnull
+  public Collection<EndpointInfo> getEndpointsInfo(@Nonnull Application application) {
 
     Optional<ServiceInfo> serviceInfoOpt = getApplicationStatus(application.getId());
 
-    final Map<String, String> endpointInfo = Maps.newHashMap();
+    final Collection<EndpointInfo> endpointInfo = new ArrayList<>();
 
     serviceInfoOpt.ifPresent(serviceInfo -> {
       serviceInfo.getInfoEndpoints()
@@ -63,15 +65,20 @@ public class ApplicationStatusServiceImpl implements ApplicationStatusService {
                 application.getDns(),
                 endpoint);
 
+            String result;
+
             try {
               Response response = requestHelper.performGetRequest(url);
 
-              String bodyResponse = response.readEntity(String.class);
-
-              endpointInfo.put(endpoint, bodyResponse);
+              result = response.readEntity(String.class);
             } catch (Exception e) {
-              endpointInfo.put(endpoint, e.getMessage());
+              result = e.getMessage();
             }
+
+            endpointInfo.add(EndpointInfo.builder()
+                .endpoint(endpoint)
+                .result(result)
+                .build());
           });
     });
 
