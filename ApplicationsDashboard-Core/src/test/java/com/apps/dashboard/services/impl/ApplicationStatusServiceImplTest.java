@@ -184,9 +184,10 @@ public class ApplicationStatusServiceImplTest {
     final String dns = "http://localhost:8080";
     final Long appId = 123L;
 
-    final Application application = mock(Application.class);
-    when(application.getId()).thenReturn(appId);
-    when(application.getDns()).thenReturn(dns);
+    final Application application = Application.builder()
+        .id(appId)
+        .dns(dns)
+        .build();
 
     when(applicationStatusRepo.getApplicationStatus(eq(appId)))
         .thenReturn(null);
@@ -204,9 +205,10 @@ public class ApplicationStatusServiceImplTest {
     final String dns = "http://localhost:8080";
     final Long appId = 123L;
 
-    final Application application = mock(Application.class);
-    when(application.getId()).thenReturn(appId);
-    when(application.getDns()).thenReturn(dns);
+    final Application application = Application.builder()
+        .id(appId)
+        .dns(dns)
+        .build();
 
     final ServiceInfo serviceInfo = mock(ServiceInfo.class);
     when(serviceInfo.getInfoEndpoints())
@@ -230,9 +232,10 @@ public class ApplicationStatusServiceImplTest {
     final String exceptionMessage = "Request Timeout";
     final String endpoint = "/ping";
 
-    final Application application = mock(Application.class);
-    when(application.getId()).thenReturn(appId);
-    when(application.getDns()).thenReturn(dns);
+    final Application application = Application.builder()
+        .id(appId)
+        .dns(dns)
+        .build();
 
     final ServiceInfo serviceInfo = mock(ServiceInfo.class);
     when(serviceInfo.getInfoEndpoints())
@@ -268,9 +271,10 @@ public class ApplicationStatusServiceImplTest {
     final String message = "works";
     final String endpoint = "/ping";
 
-    final Application application = mock(Application.class);
-    when(application.getId()).thenReturn(appId);
-    when(application.getDns()).thenReturn(dns);
+    final Application application = Application.builder()
+        .id(appId)
+        .dns(dns)
+        .build();
 
     final ServiceInfo serviceInfo = mock(ServiceInfo.class);
     when(serviceInfo.getInfoEndpoints())
