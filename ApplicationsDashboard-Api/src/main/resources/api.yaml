@@ -108,6 +108,27 @@ paths:
             type: object
             $ref: '#/definitions/ServiceInfo'
 
+  /application/{appId}/endpointsInfo:
+    get:
+      operationId: getEndpointsInfo
+      summary: Return Endpoints Information
+      tags:
+        - ServiceInfo
+      parameters:
+        - name: appId
+          type: integer
+          format: int64
+          description: Application Identifier
+          in: path
+          required: true
+      responses:
+        200:
+          description: Endpoints Information
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/EndpointInfo'
+
 definitions:
   Application:
     type: object
@@ -158,3 +179,13 @@ definitions:
       version:
         type: string
         description: Service Version
+
+  EndpointInfo:
+    type: object
+    properties:
+      endpoint:
+        type: string
+        desciption: Endpoint
+      result:
+        type: string
+        desciption: Response from endpoint

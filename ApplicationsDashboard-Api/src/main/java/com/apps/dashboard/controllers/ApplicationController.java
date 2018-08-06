@@ -1,9 +1,11 @@
 package com.apps.dashboard.controllers;
 
 import com.apps.dashboard.api.ApplicationApi;
+import com.apps.dashboard.api.NotFoundException;
 import com.apps.dashboard.api.model.Application;
 import com.apps.dashboard.api.model.ApplicationCreate;
 import com.apps.dashboard.api.model.ApplicationUpdate;
+import com.apps.dashboard.api.model.EndpointInfo;
 import com.apps.dashboard.api.model.ServiceInfo;
 import com.apps.dashboard.exceptions.EntityNotFoundException;
 import com.apps.dashboard.mappers.ApplicationMapper;
@@ -114,6 +116,19 @@ public class ApplicationController implements ApplicationApi {
             .orElseGet(
                 () -> ResponseEntity.notFound().build()
             );
+  }
+
+  @Override
+  public Callable<ResponseEntity<List<EndpointInfo>>> getEndpointsInfo(@PathVariable("appId") Long appId)
+      throws NotFoundException {
+    return () -> {
+      com.apps.dashboard.model.Application application = this.applicationService.getApplicationById(appId);
+
+      return ResponseEntity.ok(this.applicationStatusService.getEndpointsInfo(application)
+          .stream()
+          .map(endpointInfo -> this.modelMapper.map(endpointInfo, EndpointInfo.class))
+          .collect(Collectors.toList()));
+    };
   }
 
   @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Application Not Found")
