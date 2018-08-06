@@ -16,8 +16,7 @@ public class Application {
   private String healthEndpoint;
 
   public Application update(Application application) {
-    return Application.builder()
-        .id(this.id)
+    return update()
         .name(application.name)
         .dns(application.dns)
         .healthEndpoint(application.healthEndpoint)
@@ -33,7 +32,11 @@ public class Application {
   }
 
   public String getHealthCheckUrl() {
-    return this.dns + this.healthEndpoint;
+    return createUrl(this.healthEndpoint);
+  }
+
+  public String createUrl(String endpoint) {
+    return this.dns + endpoint;
   }
 
 }
