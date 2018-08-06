@@ -7,7 +7,6 @@ import com.apps.dashboard.model.ServiceInfo;
 import com.apps.dashboard.repositories.ApplicationStatusRepo;
 import com.apps.dashboard.services.ApplicationStatusService;
 import com.google.common.base.Preconditions;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
@@ -61,9 +60,7 @@ public class ApplicationStatusServiceImpl implements ApplicationStatusService {
     serviceInfoOpt.ifPresent(serviceInfo -> {
       serviceInfo.getInfoEndpoints()
           .forEach(endpoint -> {
-            String url = MessageFormat.format("{0}{1}",
-                application.getDns(),
-                endpoint);
+            String url = application.createUrl(endpoint);
 
             String result;
 
