@@ -107,6 +107,23 @@ paths:
           schema:
             type: object
             $ref: '#/definitions/ServiceInfo'
+    put:
+      operationId: createOrUpdateServiceInfo
+      summary: Create or Update Service Information
+      tags:
+        - ServiceInfo
+      parameters:
+        - name: appId
+          type: integer
+          format: int64
+          description: Application Identifier
+          in: path
+          required: true
+      responses:
+        204:
+          description: Application Updated
+        404:
+          description: "Invalid input"
 
   /application/{appId}/endpointsInfo:
     get:
@@ -179,6 +196,18 @@ definitions:
       version:
         type: string
         description: Service Version
+      infoEndpoints:
+        type: array
+        items:
+          type: string
+
+  ServiceInfoUpdate:
+    type: object
+    properties:
+      infoEndpoints:
+        type: array
+        items:
+          type: string
 
   EndpointInfo:
     type: object
