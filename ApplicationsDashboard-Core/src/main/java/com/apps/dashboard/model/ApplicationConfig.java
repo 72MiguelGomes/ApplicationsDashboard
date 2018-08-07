@@ -5,34 +5,23 @@ import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
 
-/**
- * This Object contains immutable data that will just be updated internally
- */
 @Builder
 @Getter
-public class ServiceInfo {
+public class ApplicationConfig {
 
   private Long applicationId;
 
-  private boolean healthy;
-
-  private String version;
-
-  //TODO: Remove
   private Set<String> infoEndpoints;
 
-  public ServiceInfo update(ServiceInfo serviceInfo) {
-    return ServiceInfo.builder()
+  public ApplicationConfig update(ApplicationConfig serviceInfo) {
+    return ApplicationConfig.builder()
         .applicationId(this.applicationId)
-        .healthy(serviceInfo.healthy)
-        .version(serviceInfo.version)
-        //TODO: Remove
         .infoEndpoints(clone(serviceInfo.infoEndpoints))
         .build();
   }
 
-  public static ServiceInfo empty(Long applicationId) {
-    return ServiceInfo.builder()
+  public static ApplicationConfig empty(Long applicationId) {
+    return ApplicationConfig.builder()
         .applicationId(applicationId)
         .build();
   }
