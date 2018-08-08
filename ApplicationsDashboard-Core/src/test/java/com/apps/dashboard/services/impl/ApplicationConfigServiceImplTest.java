@@ -43,7 +43,8 @@ class ApplicationConfigServiceImplTest {
     when(this.applicationConfigRepo.getApplicationConfigById(eq(appId)))
         .thenReturn(Optional.of(mockApplicationConfig));
 
-    final Optional<ApplicationConfig> applicationConfigOpt = this.applicationConfigService.getApplicationConfigById(appId);
+    final Optional<ApplicationConfig> applicationConfigOpt = this.applicationConfigService
+        .getApplicationConfigById(appId);
 
     Assertions.assertTrue(applicationConfigOpt.isPresent());
 
@@ -64,12 +65,17 @@ class ApplicationConfigServiceImplTest {
         .infoEndpoints(infoEndpoints)
         .build();
 
-    ArgumentCaptor<ApplicationConfig> applicationConfigArgumentCaptor = ArgumentCaptor.forClass(ApplicationConfig.class);
+    Mockito.when(this.applicationConfigRepo.saveOrUpdate(Mockito.any(ApplicationConfig.class)))
+        .thenReturn(applicationConfig);
+
+    ArgumentCaptor<ApplicationConfig> applicationConfigArgumentCaptor = ArgumentCaptor
+        .forClass(ApplicationConfig.class);
+
+    ApplicationConfig appConfig = this.applicationConfigService
+        .createApplicationConfig(applicationConfig);
 
     Mockito.verify(this.applicationConfigRepo, Mockito.times(1))
         .saveOrUpdate(applicationConfigArgumentCaptor.capture());
-
-    ApplicationConfig appConfig = this.applicationConfigService.createApplicationConfig(applicationConfig);
 
     ApplicationConfig appConfigPassed = applicationConfigArgumentCaptor.getValue();
 
@@ -78,6 +84,42 @@ class ApplicationConfigServiceImplTest {
 
     Assertions.assertEquals(appId, appConfig.getApplicationId());
     Assertions.assertEquals(infoEndpoints, appConfig.getInfoEndpoints());
+  }
+
+  @Test
+  void testUpdateApplicationConfig() {
+    final Long appId = 123L;
+    final Long difAppId = 321L;
+
+    Set<String> infoEndpoints = Sets.newHashSet("/ping");
+
+    final ApplicationConfig applicationConfig = ApplicationConfig.builder()
+        .applicationId(difAppId)
+        .infoEndpoints(infoEndpoints)
+        .build();
+
+    Mockito.when(this.applicationConfigRepo.saveOrUpdate(Mockito.any(ApplicationConfig.class)))
+        .thenReturn(ApplicationConfig.builder()
+            .applicationId(appId)
+            .infoEndpoints(infoEndpoints)
+            .build());
+
+    ApplicationConfig updatedApplicationConfig = this.applicationConfigService
+        .updateApplicationConfig(appId, applicationConfig);
+
+    ArgumentCaptor<ApplicationConfig> applicationConfigArgumentCaptor = ArgumentCaptor
+        .forClass(ApplicationConfig.class);
+
+    Mockito.verify(this.applicationConfigRepo, Mockito.times(1))
+        .saveOrUpdate(applicationConfigArgumentCaptor.capture());
+
+    ApplicationConfig passedApplicationConfig = applicationConfigArgumentCaptor.getValue();
+
+    Assertions.assertEquals(appId, updatedApplicationConfig.getApplicationId());
+    Assertions.assertEquals(infoEndpoints, updatedApplicationConfig.getInfoEndpoints());
+
+    Assertions.assertEquals(appId, passedApplicationConfig.getApplicationId());
+    Assertions.assertEquals(infoEndpoints, passedApplicationConfig.getInfoEndpoints());
   }
 
 }
