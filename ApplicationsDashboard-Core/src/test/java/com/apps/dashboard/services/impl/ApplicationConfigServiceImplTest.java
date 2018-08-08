@@ -1,6 +1,10 @@
 package com.apps.dashboard.services.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.apps.dashboard.model.ApplicationConfig;
@@ -15,7 +19,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 @ExtendWith(MockitoExtension.class)
 class ApplicationConfigServiceImplTest {
@@ -50,8 +53,8 @@ class ApplicationConfigServiceImplTest {
 
     final ApplicationConfig applicationConfig = applicationConfigOpt.get();
 
-    Assertions.assertEquals(appId, applicationConfig.getApplicationId());
-    Assertions.assertEquals(infoEndpoints, applicationConfig.getInfoEndpoints());
+    assertEquals(appId, applicationConfig.getApplicationId());
+    assertEquals(infoEndpoints, applicationConfig.getInfoEndpoints());
   }
 
   @Test
@@ -65,7 +68,7 @@ class ApplicationConfigServiceImplTest {
         .infoEndpoints(infoEndpoints)
         .build();
 
-    Mockito.when(this.applicationConfigRepo.saveOrUpdate(Mockito.any(ApplicationConfig.class)))
+    when(this.applicationConfigRepo.saveOrUpdate(any(ApplicationConfig.class)))
         .thenReturn(applicationConfig);
 
     ArgumentCaptor<ApplicationConfig> applicationConfigArgumentCaptor = ArgumentCaptor
@@ -74,16 +77,16 @@ class ApplicationConfigServiceImplTest {
     ApplicationConfig appConfig = this.applicationConfigService
         .createApplicationConfig(applicationConfig);
 
-    Mockito.verify(this.applicationConfigRepo, Mockito.times(1))
+    verify(this.applicationConfigRepo, times(1))
         .saveOrUpdate(applicationConfigArgumentCaptor.capture());
 
     ApplicationConfig appConfigPassed = applicationConfigArgumentCaptor.getValue();
 
-    Assertions.assertEquals(appId, appConfigPassed.getApplicationId());
-    Assertions.assertEquals(infoEndpoints, appConfigPassed.getInfoEndpoints());
+    assertEquals(appId, appConfigPassed.getApplicationId());
+    assertEquals(infoEndpoints, appConfigPassed.getInfoEndpoints());
 
-    Assertions.assertEquals(appId, appConfig.getApplicationId());
-    Assertions.assertEquals(infoEndpoints, appConfig.getInfoEndpoints());
+    assertEquals(appId, appConfig.getApplicationId());
+    assertEquals(infoEndpoints, appConfig.getInfoEndpoints());
   }
 
   @Test
@@ -98,7 +101,7 @@ class ApplicationConfigServiceImplTest {
         .infoEndpoints(infoEndpoints)
         .build();
 
-    Mockito.when(this.applicationConfigRepo.saveOrUpdate(Mockito.any(ApplicationConfig.class)))
+    when(this.applicationConfigRepo.saveOrUpdate(any(ApplicationConfig.class)))
         .thenReturn(ApplicationConfig.builder()
             .applicationId(appId)
             .infoEndpoints(infoEndpoints)
@@ -110,16 +113,16 @@ class ApplicationConfigServiceImplTest {
     ArgumentCaptor<ApplicationConfig> applicationConfigArgumentCaptor = ArgumentCaptor
         .forClass(ApplicationConfig.class);
 
-    Mockito.verify(this.applicationConfigRepo, Mockito.times(1))
+    verify(this.applicationConfigRepo, times(1))
         .saveOrUpdate(applicationConfigArgumentCaptor.capture());
 
     ApplicationConfig passedApplicationConfig = applicationConfigArgumentCaptor.getValue();
 
-    Assertions.assertEquals(appId, updatedApplicationConfig.getApplicationId());
-    Assertions.assertEquals(infoEndpoints, updatedApplicationConfig.getInfoEndpoints());
+    assertEquals(appId, updatedApplicationConfig.getApplicationId());
+    assertEquals(infoEndpoints, updatedApplicationConfig.getInfoEndpoints());
 
-    Assertions.assertEquals(appId, passedApplicationConfig.getApplicationId());
-    Assertions.assertEquals(infoEndpoints, passedApplicationConfig.getInfoEndpoints());
+    assertEquals(appId, passedApplicationConfig.getApplicationId());
+    assertEquals(infoEndpoints, passedApplicationConfig.getInfoEndpoints());
   }
 
 }
