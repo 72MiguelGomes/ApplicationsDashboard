@@ -19,6 +19,7 @@ import com.apps.dashboard.api.model.ApplicationUpdate;
 import com.apps.dashboard.exceptions.EntityNotFoundException;
 import com.apps.dashboard.model.Application;
 import com.apps.dashboard.model.ServiceInfo;
+import com.apps.dashboard.services.ApplicationConfigService;
 import com.apps.dashboard.services.ApplicationService;
 import com.apps.dashboard.services.ApplicationStatusService;
 import com.google.common.collect.Sets;
@@ -51,6 +52,9 @@ public class ApplicationControllerTest {
 
   @MockBean
   private ApplicationStatusService applicationStatusService;
+
+  @MockBean
+  private ApplicationConfigService applicationConfigService;
 
   /**
    * Test getApplications
