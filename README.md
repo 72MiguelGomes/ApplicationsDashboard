@@ -2,6 +2,30 @@
 
 Application responsible to validate the healthy of services.
 
+## Start Application
+
+This application has 2 modes, the API and the Web view.
+
+### API
+
+Expose a rest API to configure services.
+
+#### Start Command
+
+```bash
+cd ApplicationsDashboard-Starter; mvn spring-boot:run
+```
+
+### WebView
+
+Application with a web interface
+
+#### Start Command
+
+```bash
+cd ApplicationsDashboard-Starter-Web; mvn spring-boot:run
+```
+
 ## Modules
 
 Quick explanation regarding modules responsibility.
