@@ -9,6 +9,7 @@ import com.apps.dashboard.api.model.EndpointInfo;
 import com.apps.dashboard.api.model.ServiceInfo;
 import com.apps.dashboard.exceptions.EntityNotFoundException;
 import com.apps.dashboard.mappers.ApplicationMapper;
+import com.apps.dashboard.services.ApplicationConfigService;
 import com.apps.dashboard.services.ApplicationService;
 import com.apps.dashboard.services.ApplicationStatusService;
 import java.net.URI;
@@ -35,13 +36,17 @@ public class ApplicationController implements ApplicationApi {
 
   private final ApplicationStatusService applicationStatusService;
 
+  private final ApplicationConfigService applicationConfigService;
+
   private final ModelMapper modelMapper;
 
   @Autowired
   public ApplicationController(ApplicationService applicationService,
-      ApplicationStatusService applicationStatusService, ModelMapper modelMapper) {
+      ApplicationStatusService applicationStatusService,
+      ApplicationConfigService applicationConfigService, ModelMapper modelMapper) {
     this.applicationService = applicationService;
     this.applicationStatusService = applicationStatusService;
+    this.applicationConfigService = applicationConfigService;
     this.modelMapper = modelMapper;
   }
 
@@ -124,7 +129,7 @@ public class ApplicationController implements ApplicationApi {
     return () -> {
       com.apps.dashboard.model.Application application = this.applicationService.getApplicationById(appId);
 
-      return ResponseEntity.ok(this.applicationStatusService.getEndpointsInfo(application)
+      return ResponseEntity.ok(this.applicationConfigService.getEndpointsInfo(application)
           .stream()
           .map(endpointInfo -> this.modelMapper.map(endpointInfo, EndpointInfo.class))
           .collect(Collectors.toList()));

@@ -4,21 +4,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.apps.dashboard.model.Application;
-import com.apps.dashboard.model.EndpointInfo;
 import com.apps.dashboard.model.ServiceInfo;
 import com.apps.dashboard.repositories.ApplicationStatusRepo;
 import com.apps.dashboard.services.ApplicationConfigService;
-import java.util.Collection;
 import java.util.Optional;
 import name.falgout.jeffrey.testing.junit.mockito.MockitoExtension;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -168,32 +162,5 @@ public class ApplicationStatusServiceImplTest {
         .getApplicationStatus(applicationID);
 
     assertFalse(serviceInfo.isPresent());
-  }
-
-  /**
-   * Test getEndpointsInfo
-   */
-  @Test
-  // Temporary test for the migration
-  void testGetEndpointsInfoNonExistentServiceInfo() {
-    final Long appId = 123L;
-
-    final Application application = Application.builder()
-        .id(appId)
-        .build();
-
-    final Collection<EndpointInfo> endpointInfosMock = mock(Collection.class);
-
-    when(applicationConfigService.getEndpointsInfo(eq(application)))
-        .thenReturn(endpointInfosMock);
-
-    when(applicationStatusService.getApplicationStatus(eq(appId)))
-        .thenReturn(null);
-
-    Collection<EndpointInfo> endpointInfos = this.applicationConfigService
-        .getEndpointsInfo(application);
-
-    Assertions.assertTrue(endpointInfos == endpointInfosMock);
-    verify(this.applicationConfigService, atLeastOnce()).getEndpointsInfo(eq(application));
   }
 }

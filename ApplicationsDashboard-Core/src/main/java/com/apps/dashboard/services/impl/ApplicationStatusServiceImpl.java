@@ -1,13 +1,9 @@
 package com.apps.dashboard.services.impl;
 
-import com.apps.dashboard.model.Application;
-import com.apps.dashboard.model.EndpointInfo;
 import com.apps.dashboard.model.ServiceInfo;
 import com.apps.dashboard.repositories.ApplicationStatusRepo;
-import com.apps.dashboard.services.ApplicationConfigService;
 import com.apps.dashboard.services.ApplicationStatusService;
 import com.google.common.base.Preconditions;
-import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -19,14 +15,10 @@ public class ApplicationStatusServiceImpl implements ApplicationStatusService {
 
   private ApplicationStatusRepo applicationStatusRepo;
 
-  private ApplicationConfigService applicationConfigService;
-
   @Autowired
   public ApplicationStatusServiceImpl(
-      ApplicationStatusRepo applicationStatusRepo,
-      ApplicationConfigService applicationConfigService) {
+      ApplicationStatusRepo applicationStatusRepo) {
     this.applicationStatusRepo = applicationStatusRepo;
-    this.applicationConfigService = applicationConfigService;
   }
 
   @Override
@@ -45,12 +37,5 @@ public class ApplicationStatusServiceImpl implements ApplicationStatusService {
     Preconditions.checkArgument(Objects.nonNull(applicationId), "ApplicationId must non null");
 
     return Optional.ofNullable(applicationStatusRepo.getApplicationStatus(applicationId));
-  }
-
-  @Override
-  @Nonnull
-  @Deprecated // Call ApplicationConfigServiceImpl Directly
-  public Collection<EndpointInfo> getEndpointsInfo(@Nonnull Application application) {
-    return applicationConfigService.getEndpointsInfo(application);
   }
 }
