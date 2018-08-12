@@ -1,7 +1,5 @@
 package com.apps.dashboard.model;
 
-import java.util.HashSet;
-import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -18,16 +16,11 @@ public class ServiceInfo {
 
   private String version;
 
-  //TODO: Remove
-  private Set<String> infoEndpoints;
-
   public ServiceInfo update(ServiceInfo serviceInfo) {
     return ServiceInfo.builder()
         .applicationId(this.applicationId)
         .healthy(serviceInfo.healthy)
         .version(serviceInfo.version)
-        //TODO: Remove
-        .infoEndpoints(clone(serviceInfo.infoEndpoints))
         .build();
   }
 
@@ -35,10 +28,6 @@ public class ServiceInfo {
     return ServiceInfo.builder()
         .applicationId(applicationId)
         .build();
-  }
-
-  private <A> Set<A> clone(Set<A> setList) {
-    return setList != null ? new HashSet<>(setList) : null;
   }
 
 }
