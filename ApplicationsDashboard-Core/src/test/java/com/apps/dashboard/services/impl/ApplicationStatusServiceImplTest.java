@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 
 import com.apps.dashboard.model.ServiceInfo;
 import com.apps.dashboard.repositories.ApplicationStatusRepo;
-import com.apps.dashboard.services.ApplicationConfigService;
 import java.util.Optional;
 import name.falgout.jeffrey.testing.junit.mockito.MockitoExtension;
 import org.junit.jupiter.api.Test;
@@ -27,9 +26,6 @@ public class ApplicationStatusServiceImplTest {
 
   @Mock
   private ApplicationStatusRepo applicationStatusRepo;
-
-  @Mock
-  private ApplicationConfigService applicationConfigService;
 
   /**
    * Test updateApplicationStatus
