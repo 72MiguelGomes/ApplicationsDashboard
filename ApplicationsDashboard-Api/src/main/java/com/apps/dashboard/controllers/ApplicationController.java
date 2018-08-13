@@ -3,6 +3,7 @@ package com.apps.dashboard.controllers;
 import com.apps.dashboard.api.ApplicationApi;
 import com.apps.dashboard.api.NotFoundException;
 import com.apps.dashboard.api.model.Application;
+import com.apps.dashboard.api.model.ApplicationConfig;
 import com.apps.dashboard.api.model.ApplicationCreate;
 import com.apps.dashboard.api.model.ApplicationUpdate;
 import com.apps.dashboard.api.model.EndpointInfo;
@@ -14,6 +15,7 @@ import com.apps.dashboard.services.ApplicationService;
 import com.apps.dashboard.services.ApplicationStatusService;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
@@ -133,6 +135,16 @@ public class ApplicationController implements ApplicationApi {
           .stream()
           .map(endpointInfo -> this.modelMapper.map(endpointInfo, EndpointInfo.class))
           .collect(Collectors.toList()));
+    };
+  }
+
+  @Override
+  public Callable<ResponseEntity<ApplicationConfig>> getApplicationConfig(@PathVariable("appId") Long appId)
+      throws NotFoundException {
+    return () -> {
+      Optional<com.apps.dashboard.model.ApplicationConfig> applicationConfig = this.applicationConfigService.getApplicationConfigById(appId);
+
+      return ResponseEntity.ok(this.modelMapper.map(applicationConfig.orElseThrow(EntityNotFoundException::new), ApplicationConfig.class));
     };
   }
 
