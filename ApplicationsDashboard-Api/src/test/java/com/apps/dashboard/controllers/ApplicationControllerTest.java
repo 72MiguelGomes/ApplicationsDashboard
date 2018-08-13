@@ -18,6 +18,7 @@ import com.apps.dashboard.api.model.ApplicationCreate;
 import com.apps.dashboard.api.model.ApplicationUpdate;
 import com.apps.dashboard.exceptions.EntityNotFoundException;
 import com.apps.dashboard.model.Application;
+import com.apps.dashboard.model.ApplicationConfig;
 import com.apps.dashboard.model.ServiceInfo;
 import com.apps.dashboard.services.ApplicationConfigService;
 import com.apps.dashboard.services.ApplicationService;
@@ -29,6 +30,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.stubbing.Answer;
@@ -329,6 +331,63 @@ public class ApplicationControllerTest {
         .thenReturn(Optional.empty());
 
     MvcResult mvcResult = mockMvc.perform(get("/application/" + appId + "/serviceInfo")
+        .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(request().asyncStarted())
+        .andReturn();
+
+    this.mockMvc.perform(asyncDispatch(mvcResult))
+        .andExpect(status().isNotFound());
+  }
+
+  /**
+   * Test getApplicationConfig
+   */
+  @Test
+  public void testGetApplicationConfig() throws Exception {
+
+    final Long appId = 123L;
+    final Set<String> endpointConfig = Sets.newHashSet(
+        "/test"
+    );
+
+    final ApplicationConfig applicationConfig = ApplicationConfig
+        .builder()
+        .applicationId(appId)
+        .infoEndpoints(endpointConfig)
+        .build();
+
+    when(this.applicationConfigService.getApplicationConfigById(eq(appId)))
+        .thenReturn(Optional.of(applicationConfig));
+
+    MvcResult mvcResult = mockMvc.perform(get("/application/" + appId + "/config")
+        .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(request().asyncStarted())
+        .andReturn();
+
+    this.mockMvc.perform(asyncDispatch(mvcResult))
+        .andExpect(status().isOk());
+
+    String jsonResult = mvcResult.getResponse().getContentAsString();
+
+    com.apps.dashboard.api.model.ApplicationConfig appConfigResult = new Gson().fromJson(jsonResult, com.apps.dashboard.api.model.ApplicationConfig.class);
+
+    assertEquals(endpointConfig.size(), appConfigResult.getInfoEndpoints().size());
+
+    appConfigResult.getInfoEndpoints()
+        .stream()
+        .map(endpointConfig::contains)
+        .forEach(Assertions::assertTrue);
+  }
+
+  @Test
+  public void testGetApplicationConfigNotExist() throws Exception {
+
+    final Long appId = 123L;
+
+    when(this.applicationConfigService.getApplicationConfigById(eq(appId)))
+        .thenReturn(Optional.empty());
+
+    MvcResult mvcResult = mockMvc.perform(get("/application/" + appId + "/config")
         .contentType(MediaType.APPLICATION_JSON))
         .andExpect(request().asyncStarted())
         .andReturn();
