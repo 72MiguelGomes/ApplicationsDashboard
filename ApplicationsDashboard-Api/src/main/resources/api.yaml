@@ -125,6 +125,27 @@ paths:
         404:
           description: "Invalid input"
 
+
+  /application/{appId}/config:
+    get:
+      operationId: getApplicationConfig
+      summary: Return Application Configuration
+      tags:
+        - ApplicationConfig
+      parameters:
+        - name: appId
+          type: integer
+          format: int64
+          description: Application Identifier
+          in: path
+          required: true
+      responses:
+        200:
+          description: Application Config
+          schema:
+            type: object
+            $ref: '#/definitions/ApplicationConfig'
+
   /application/{appId}/endpointsInfo:
     get:
       operationId: getEndpointsInfo
@@ -202,6 +223,14 @@ definitions:
           type: string
 
   ServiceInfoUpdate:
+    type: object
+    properties:
+      infoEndpoints:
+        type: array
+        items:
+          type: string
+
+  ApplicationConfig:
     type: object
     properties:
       infoEndpoints:
